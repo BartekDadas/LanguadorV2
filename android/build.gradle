@@ -16,3 +16,105 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+//buildscript {
+//    ext {
+//        agp_version = '8.2.1'    // A newer, stable version of the Android Gradle Plugin
+//        kotlin_version = '1.9.22'
+//        java_version = JavaVersion.VERSION_17
+//    }
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//    dependencies {
+//        classpath "com.android.tools.build:gradle:$agp_version"
+//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+//        // Using a well-known stable version of the Google Services plugin
+//        classpath "com.google.gms:google-services:4.3.15"
+//    }
+//}
+//
+//allprojects {
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//
+//    tasks.withType(JavaCompile) {
+//        sourceCompatibility = java_version
+//        targetCompatibility = java_version
+//    }
+//
+//    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+//        kotlinOptions {
+//            jvmTarget = java_version.toString()
+//        }
+//        kotlinJavaToolchain.toolchain.use(
+//                javaToolchains.launcherFor {
+//                    languageVersion.set(JavaLanguageVersion.of(17))
+//                }
+//        )
+//    }
+//}
+//
+//rootProject.buildDir = "../build"
+//subprojects {
+//    project.buildDir = "${rootProject.buildDir}/${project.name}"
+//    project.evaluationDependsOn(":app")
+//}
+////subprojects {
+////    // project.evaluationDependbuildscript {
+////    //     ext {
+////    //         agp_version = '8.2.1'
+////    //         kotlin_version = '1.9.22'
+////    //         java_version = JavaVersion.VERSION_17
+////    //     }
+////    //     repositories {
+////    //         google()
+////    //         mavenCentral()
+////    //     }
+////    //     dependencies {
+////    //         classpath "com.android.tools.build:gradle:$agp_version"
+////    //         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+////    //         classpath "com.google.gms:google-services:4.3.15"
+////    //     }
+////    // }
+////
+////    allprojects {
+////        repositories {
+////            google()
+////            mavenCentral()
+////        }
+////
+////        tasks.withType(JavaCompile) {
+////            javaCompiler = javaToolchains.compilerFor {
+////                languageVersion = JavaLanguageVersion.of(17)
+////            }
+////        }
+////
+////        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+////            kotlinOptions {
+////                jvmTarget = "17"
+////            }
+////            kotlinJavaToolchain.toolchain.use(
+////                    javaToolchains.launcherFor {
+////                        languageVersion.set(JavaLanguageVersion.of(17))
+////                    }
+////            )
+////        }
+////    }
+////
+////    rootProject.buildDir = "../build"
+////    subprojects {
+////        project.buildDir = "${rootProject.buildDir}/${project.name}"
+////    }
+////    subprojects {
+////        project.evaluationDependsOn(":app")
+////    }
+////
+////
+////}
+//tasks.register("clean", Delete) {
+//    delete rootProject.buildDir
+//}
