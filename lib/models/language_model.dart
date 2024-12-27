@@ -13,6 +13,15 @@ class LanguageModel {
     this.isAvailable = true,
   });
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is LanguageModel && other.code == code;
+  }
+
+  @override
+  int get hashCode => code.hashCode;
+
   static const List<LanguageModel> supportedLanguages = [
     LanguageModel(
       code: 'en',
@@ -82,4 +91,19 @@ class LanguageModel {
       orElse: () => supportedLanguages.first,
     );
   }
+
+  @override
+  String toString() {
+    return code;
+  }
+
+  static LanguageModel fromJson(Map<String, dynamic> json) {
+    return LanguageModel(
+      code: json['code'] as String,
+      name: json['name'] as String,
+      nativeName: json['nativeName'] as String,
+      flagEmoji: json['flagEmoji'] as String,
+    );
+  }
+
 }

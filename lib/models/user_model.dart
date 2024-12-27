@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'language_model.dart';
 
 class UserModel {
   final String uid;
   final String email;
   final String? displayName;
   final String? photoUrl;
-  final String preferredLanguage;
-  final List<String> learningLanguages;
+  final LanguageModel preferredLanguage;
+  final List<LanguageModel> learningLanguages;
   final int level;
   final int experience;
   final DateTime createdAt;
@@ -35,8 +36,8 @@ class UserModel {
       'learningLanguages': learningLanguages,
       'level': level,
       'experience': experience,
-      'createdAt': createdAt,
-      'lastLoginAt': lastLoginAt,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'lastLoginAt': Timestamp.fromDate(lastLoginAt),
     };
   }
 
@@ -46,8 +47,8 @@ class UserModel {
       email: map['email'] as String,
       displayName: map['displayName'] as String?,
       photoUrl: map['photoUrl'] as String?,
-      preferredLanguage: map['preferredLanguage'] as String,
-      learningLanguages: List<String>.from(map['learningLanguages']),
+      preferredLanguage: LanguageModel.fromJson(map['preferredLanguage']),
+      learningLanguages: List.of(map['learningLanguages']).map((e) => LanguageModel.fromJson(e)).toList(),
       level: map['level'] as int,
       experience: map['experience'] as int,
       createdAt: (map['createdAt'] as Timestamp).toDate(),
@@ -60,8 +61,8 @@ class UserModel {
     String? email,
     String? displayName,
     String? photoUrl,
-    String? preferredLanguage,
-    List<String>? learningLanguages,
+    LanguageModel? preferredLanguage,
+    List<LanguageModel>? learningLanguages,
     int? level,
     int? experience,
     DateTime? createdAt,

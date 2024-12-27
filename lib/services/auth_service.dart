@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:languador/models/language_model.dart';
 import '../models/user_model.dart';
 
 class AuthService {
@@ -34,8 +35,8 @@ class AuthService {
   Future<UserModel> registerWithEmailAndPassword(
     String email,
     String password,
-    String preferredLanguage,
-    List<String> learningLanguages,
+    LanguageModel preferredLanguage,
+    List<LanguageModel> learningLanguages,
   ) async {
     try {
       final UserCredential result = await _auth.createUserWithEmailAndPassword(
@@ -81,13 +82,13 @@ class AuthService {
   // Update user language preferences
   Future<void> updateLanguagePreferences(
     String uid,
-    String preferredLanguage,
-    List<String> learningLanguages,
+    LanguageModel preferredLanguage,
+    List<LanguageModel> learningLanguages,
   ) async {
     try {
       await _firestore.collection('users').doc(uid).update({
-        'preferredLanguage': preferredLanguage,
-        'learningLanguages': learningLanguages,
+        'preferredLanguage': preferredLanguage.toString(),
+        'learningLanguages': learningLanguages.map((lang) => lang.toString()).toList(),
       });
     } catch (e) {
       throw Exception('Failed to update language preferences: $e');
