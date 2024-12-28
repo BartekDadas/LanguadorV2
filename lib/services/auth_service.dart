@@ -20,7 +20,11 @@ class AuthService {
         email: email,
         password: password,
       );
-      
+
+      if(result.user == null) {
+        throw Exception('User not found');
+      }
+
       await _firestore.collection('users').doc(result.user!.uid).update({
         'lastLoginAt': DateTime.now(),
       });
@@ -44,6 +48,10 @@ class AuthService {
         password: password,
       );
 
+      if(result.user?.uid == null) {
+        print('Auth Service: User not found');
+      }
+
       // Create user profile in Firestore
       final UserModel user = UserModel(
         uid: result.user!.uid,
@@ -54,7 +62,8 @@ class AuthService {
         lastLoginAt: DateTime.now(),
       );
 
-      await _firestore.collection('users').doc(user.uid).set(user.toMap());
+      await _firestore.collection('users').add(user.toMap());
+          // .doc(user.uid).set(user.toMap());
       return user;
     } catch (e) {
       throw _handleAuthError(e);

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,10 +55,17 @@ class AuthProvider with ChangeNotifier {
       // 3. Convert Firestore data into UserModel
       if (userDoc.exists) {
         // _user = UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
-        print("${userDoc.data()} \n${userDoc.data().runtimeType}");
+        print("${userDoc.data()} \n${userDoc
+            .data()
+            .runtimeType}");
         notifyListeners();
-        _user = UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
-        return true;
+        if (userDoc.data() != null && userDoc.data() is Map) {
+          _user = UserModel.fromMap(
+              Map<String, dynamic>.from(userDoc.data() as Map));
+          return true;
+        } else {
+          return false;
+        }
       } else {
         // If your user document doesn’t exist, handle accordingly
         // e.g., throw an exception or return null
@@ -65,7 +74,7 @@ class AuthProvider with ChangeNotifier {
       return true;
     } on FirebaseAuthException catch (e) {
       // This will throw a readable FirebaseAuth error
-      _error = e.message ?? "Failed to sign in";
+      _error = e.message; //?? "Failed to sign in";
       return false;
       // throw Exception();
     } catch (e) {
@@ -84,42 +93,54 @@ class AuthProvider with ChangeNotifier {
     LanguageModel preferredLanguage,
     List<LanguageModel> learningLanguages,
   ) async {
-    try {
-      _isLoading = true;
-      _error = null;
-      notifyListeners();
-
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Create user document in Firestore
-      UserModel userModel = UserModel(
-        uid: userCredential.user!.uid,
-        displayName: userCredential.user!.displayName,
-        photoUrl: userCredential.user!.photoURL,
-        email: email,
-        preferredLanguage: preferredLanguage,
-        learningLanguages: learningLanguages,
-        createdAt: DateTime.now(),
-        lastLoginAt: DateTime.now(),
-      );
-
-      await _firestore
-          .collection('users')
-          .doc(userModel.uid)
-          .set(userModel.toMap());
-
-      _user = userModel;
-      return true;
-    } catch (e) {
-      _error = e.toString();
-      return false;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
+    return (await AuthService().
+      registerWithEmailAndPassword(
+        email,
+        password,
+        preferredLanguage,
+        learningLanguages)
+    ).level == 1;
+    // try {
+    //   _isLoading = true;
+    //   _error = null;
+    //   notifyListeners();
+    //
+    //   UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+    //     email: email,
+    //     password: password,
+    //   );
+    //
+    //   print("New User: ${userCredential.user}");
+    //
+    //   // Create user document in Firestore
+    //   UserModel userModel = UserModel(
+    //     uid: userCredential.user!.uid,
+    //     displayName: userCredential.user!.displayName,
+    //     photoUrl: userCredential.user!.photoURL,
+    //     email: email,
+    //     preferredLanguage: preferredLanguage,
+    //     learningLanguages: learningLanguages,
+    //     createdAt: DateTime.now(),
+    //     lastLoginAt: DateTime.now(),
+    //   );
+    //
+    //   print("New User Model: ${userModel.uid}");
+    //
+    //
+    //   await _firestore
+    //       .collection('users')
+    //       .doc(userModel.uid)
+    //       .set(userModel.toMap());
+    //
+    //   _user = userModel;
+    //   return true;
+    // } catch (e) {
+    //   _error = e.toString();
+    //   return false;
+    // } finally {
+    //   _isLoading = false;
+    //   notifyListeners();
+    // }
   }
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();

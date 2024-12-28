@@ -106,4 +106,13 @@ class LanguageModel {
     );
   }
 
+  toMap() {
+    return {
+      'code': code,
+      'name': name,
+      'nativeName': nativeName,
+      'flagEmoji': flagEmoji,
+    };
+  }
+
 }

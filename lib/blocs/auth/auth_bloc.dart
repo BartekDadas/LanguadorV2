@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:languador/blocs/auth/auth_event.dart';
 import 'package:languador/blocs/auth/auth_state.dart';
@@ -55,6 +56,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.preferredLanguage,
         [event.learningLanguage],
       );
+      print("From Bloc $userCredential");
       if (userCredential) {
         emit(AuthState.authenticated(_auth.user!));
       } else {

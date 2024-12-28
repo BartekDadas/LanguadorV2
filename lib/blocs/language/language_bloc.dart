@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:languador/blocs/language/language_event.dart';
 import 'package:languador/blocs/language/language_state.dart';
-import 'package:languador/models/language.dart';
 
 import '../../models/language_model.dart';
 import '../../providers/auth_provider.dart';
