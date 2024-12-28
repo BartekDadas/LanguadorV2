@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:languador/blocs/auth/auth_bloc.dart';
 import 'package:languador/blocs/auth/auth_event.dart';
 import 'package:languador/blocs/auth/auth_state.dart';
@@ -25,10 +26,7 @@ class LoginScreen extends StatelessWidget {
         listener: (context, state) {
           state.maybeWhen(
             authenticated: (_) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
+              context.go('/');
             },
             error: (message) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -263,12 +261,7 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(height: 24),
                         // Register link
                         TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => RegisterScreen()),
-                            );
-                          },
+                          onPressed: () => context.push('/register'),
                           style: TextButton.styleFrom(
                             foregroundColor: theme.colorScheme.onPrimary,
                             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),

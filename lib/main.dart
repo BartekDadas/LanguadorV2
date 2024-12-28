@@ -1,8 +1,10 @@
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'providers/auth_provider.dart';
+import 'config/router.dart';
+import 'config/dependency_injection.dart';
 import 'screens/auth/login_screen.dart';
 
 void main() async {
@@ -12,6 +14,9 @@ void main() async {
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
   );
+  
+  // Initialize dependencies
+  await setupDependencies();
 
   runApp(const MyApp());
 }
@@ -23,9 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Languador',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
@@ -43,28 +48,29 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: Consumer<AuthProvider>(
-          builder: (context, authProvider, _) {
-            if (authProvider.isAuthenticated) {
-              // TODO: Return the main game screen once implemented
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text('Languador'),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.logout),
-                      onPressed: () => authProvider.signOut(),
-                    ),
-                  ],
-                ),
-                body: const Center(
-                  child: Text('Welcome to Languador!'),
-                ),
-              );
-            }
-            return LoginScreen();
-          },
-        ),
+        routerConfig: router,
+        // home: Consumer<AuthProvider>(
+        //   builder: (context, authProvider, _) {
+        //     if (authProvider.isAuthenticated) {
+        //       // TODO: Return the main game screen once implemented
+        //       return Scaffold(
+        //         appBar: AppBar(
+        //           title: const Text('Languador'),
+        //           actions: [
+        //             IconButton(
+        //               icon: const Icon(Icons.logout),
+        //               onPressed: () => authProvider.signOut(),
+        //             ),
+        //           ],
+        //         ),
+        //         body: const Center(
+        //           child: Text('Welcome to Languador!'),
+        //         ),
+        //       );
+        //     }
+        //     return LoginScreen();
+        //   },
+        // ),
       ),
     );
   }

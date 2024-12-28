@@ -7,7 +7,7 @@ import 'package:languador/blocs/language/language_bloc.dart';
 import 'package:languador/blocs/language/language_event.dart';
 import 'package:languador/blocs/language/language_state.dart';
 import 'package:languador/models/language_model.dart';
-import 'home_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
@@ -31,10 +31,7 @@ class RegisterScreen extends StatelessWidget {
         listener: (context, state) {
           state.maybeWhen(
             authenticated: (_) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
+              context.go('/');
             },
             error: (message) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -391,7 +388,7 @@ class RegisterScreen extends StatelessWidget {
                         const SizedBox(height: 24),
                         // Login link
                         TextButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => context.pop(),
                           style: TextButton.styleFrom(
                             foregroundColor: theme.colorScheme.onPrimary,
                             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),

@@ -62,8 +62,8 @@ class AuthService {
         lastLoginAt: DateTime.now(),
       );
 
-      await _firestore.collection('users').add(user.toMap());
-          // .doc(user.uid).set(user.toMap());
+      await _firestore.collection('users')
+          .doc(user.uid).set(user.toMap());
       return user;
     } catch (e) {
       throw _handleAuthError(e);
