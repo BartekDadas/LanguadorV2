@@ -5,6 +5,7 @@ targets:
         generate_for:
           include:
             - lib/blocs/*/**.dart
+            - lib/models/**.dart
         options:
           # You can customize freezed options here if needed
           copy_with: true

@@ -6,6 +6,7 @@ import 'providers/auth_provider.dart';
 import 'config/router.dart';
 import 'config/dependency_injection.dart';
 import 'screens/auth/login_screen.dart';
+import "package:flutter_dotenv/flutter_dotenv.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,10 +15,9 @@ void main() async {
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
   );
-  
   // Initialize dependencies
   await setupDependencies();
-
+  await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
 
