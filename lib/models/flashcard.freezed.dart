@@ -183,7 +183,7 @@ class __$$FlashcardImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$FlashcardImpl implements _Flashcard {
+class _$FlashcardImpl extends _Flashcard {
   const _$FlashcardImpl(
       {required this.id,
       required this.front,
@@ -191,7 +191,8 @@ class _$FlashcardImpl implements _Flashcard {
       required this.language,
       this.isLearned = false,
       this.example,
-      this.imageUrl});
+      this.imageUrl})
+      : super._();
 
   factory _$FlashcardImpl.fromJson(Map<String, dynamic> json) =>
       _$$FlashcardImplFromJson(json);
@@ -255,7 +256,7 @@ class _$FlashcardImpl implements _Flashcard {
   }
 }
 
-abstract class _Flashcard implements Flashcard {
+abstract class _Flashcard extends Flashcard {
   const factory _Flashcard(
       {required final String id,
       required final String front,
@@ -264,6 +265,7 @@ abstract class _Flashcard implements Flashcard {
       final bool isLearned,
       final String? example,
       final String? imageUrl}) = _$FlashcardImpl;
+  const _Flashcard._() : super._();
 
   factory _Flashcard.fromJson(Map<String, dynamic> json) =
       _$FlashcardImpl.fromJson;

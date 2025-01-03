@@ -35,6 +35,23 @@ class AuthService {
     }
   }
 
+  Future<bool> passItemToFireStore(
+      String collectionName,
+      String docId,
+      Map<String, dynamic> data
+  ) async {
+    try {
+      await _firestore.collection(collectionName).doc(docId).set(data);
+      return true;
+    }
+    on FirebaseException catch (e) {
+      throw Exception('Error Firestore: $e');
+    }
+    catch (e) {
+      throw Exception('Failed to pass item to Firestore: $e');
+    }
+  }
+
   // Register with email and password
   Future<UserModel> registerWithEmailAndPassword(
     String email,

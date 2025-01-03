@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'flashcard.freezed.dart';
 part 'flashcard.g.dart';
@@ -15,6 +16,8 @@ class Flashcard with _$Flashcard {
     String? example,
     String? imageUrl,
   }) = _Flashcard;
+
+  const Flashcard._();
 
   factory Flashcard.fromJson(Map<String, dynamic> json) =>
       _$FlashcardFromJson(json);
