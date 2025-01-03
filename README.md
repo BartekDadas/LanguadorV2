@@ -5,12 +5,12 @@ Welcome to **Languador**, the next evolution of the AI-powered language learning
 **Note:** This is an ongoing project. For a detailed overview and the current progress, please refer to the [instructions_public.md](instructions_public.md) file.
 
 # Screenshots
-![Login](https://drive.google.com/file/d/1cz2Zy6oHazHy3aBl3hnQdk9T1T_14TPZ)
-![Register](https://drive.google.com/file/d/1UlkO3vhOG977h-PYTuX7iEVc9_waH0Pm)
-![Home](https://drive.google.com/file/d/1dIS9WdcLYbSqO_7PWybLOvW19Npht4ID)
-![Games](https://drive.google.com/file/d/1mNLdq7TpEZ5y9DHSzWufxp8XOLS7_oeS)
-![Flashcards](https://drive.google.com/file/d/1UWH4vHXOym7L2p4DwHxwBkRsybgMRZcK)
-![Settings](https://drive.google.com/file/d/1b4zfs6Dnb9JWgxfws49rvJHp58nrVv9I)
+![Login](https://drive.google.com/uc?export=view&id=1cz2Zy6oHazHy3aBl3hnQdk9T1T_14TPZ)
+![Register](https://drive.google.com/uc?export=view&id=1UlkO3vhOG977h-PYTuX7iEVc9_waH0Pm)
+![Home](https://drive.google.com/uc?export=view&id=1dIS9WdcLYbSqO_7PWybLOvW19Npht4ID)
+![Games](https://drive.google.com/uc?export=view&id=1mNLdq7TpEZ5y9DHSzWufxp8XOLS7_oeS)
+![Flashcards](https://drive.google.com/uc?export=view&id=1UWH4vHXOym7L2p4DwHxwBkRsybgMRZcK)
+![Settings](https://drive.google.com/uc?export=view&id=1b4zfs6Dnb9JWgxfws49rvJHp58nrVv9I)
 
 ---
 
