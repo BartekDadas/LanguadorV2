@@ -1,57 +1,71 @@
-# Languador - Interactive Language Learning Game
+# Languador 🌐📱
 
-A gamified language learning application built with Flutter and Flame engine that makes learning new languages fun and interactive.
+Welcome to **Languador**, the next evolution of the AI-powered language learning mobile application designed to make acquiring new languages interactive and enjoyable. This version introduces enhanced features and improved performance, leveraging advanced technologies to provide a seamless learning experience.
 
-## Features
+**Note:** This is an ongoing project. For a detailed overview and the current progress, please refer to the [instructions_public.md](instructions_public.md) file.
 
-- Multiple interactive game modes for language learning
-- AI-powered personalized content generation
-- Real-time multiplayer challenges
-- Progress tracking and achievements
-- Customizable learning paths
+---
 
-## Project Structure
+## Table of Contents
 
-```
-lib/
-├── config/         # App configuration, constants, and themes
-├── game/           # Game-related components and logic using Flame
-├── models/         # Data models and entities
-├── providers/      # State management using Provider
-├── screens/        # UI screens and pages
-├── services/       # API services and Firebase integration
-├── utils/          # Utility functions and helpers
-└── widgets/        # Reusable UI components
+- [About the Project](#about-the-project)
+- [Built With](#built-with)
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Acknowledgements](#acknowledgements)
+- [Contact](#contact)
 
-assets/
-├── audio/          # Sound effects and background music
-├── fonts/          # Custom fonts
-└── images/         # Images and graphics
-```
+---
 
-## Setup
+## About the Project 📚
 
-1. Clone the repository
-2. Create a `.env` file based on `.env.example`
-3. Configure Firebase:
-   - Add `google-services.json` for Android
-   - Add `GoogleService-Info.plist` for iOS
-4. Run `flutter pub get`
-5. Run `flutter run`
+Languador (Version 2) is a mobile application that combines the power of artificial intelligence with gamified learning to help users master new languages. By engaging in interactive exercises and challenges, users can enhance their language skills in a fun and effective way.
 
-## Dependencies
+> **Backend Information:**  
+> The backend for this application is designed using the **PydanticAI Framework** and **CrewAI Flow**, but it is not included in this repository. The backend architecture allows for scalable AI-driven interactions, ensuring a responsive and personalized learning experience.  
 
-- Flutter Flame for game engine
-- Firebase for backend services
-- Provider for state management
-- Flutter dotenv for environment variables
+---
 
-## Development
+## Built With 🛠️
 
-- Minimum Flutter SDK: 3.6.0
-- Dart SDK: 3.6.0
-- Target Platforms: iOS, Android
+This project was developed using the following tools and technologies:
 
-## License
+- **Windsurf IDE**: An AI-powered Integrated Development Environment that enhances developer productivity by integrating advanced AI capabilities directly into the coding workflow. Windsurf offers features like real-time collaboration, context-aware assistance, and intelligent code suggestions, all designed to keep developers in the flow state. ([Learn more](https://codeium.com/windsurf?utm_source=chatgpt.com))
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- **PydanticAI Framework**: A Python agent framework designed to simplify the development of production-grade applications with Generative AI. *(Backend not included)*
+
+- **CrewAI Flow**: A framework that streamlines the creation and management of AI workflows, allowing developers to combine and coordinate coding tasks efficiently. *(Backend not included)*
+
+- **Flutter**: Used for building the mobile application with a modern, responsive design.
+
+---
+
+## Features ✨
+
+- **AI-Powered Learning**: Personalized content generation tailored to the user's learning pace and preferences.
+- **Interactive Exercises**: Engaging activities designed to reinforce language skills through practice.
+- **Progress Tracking**: Monitor your learning journey with detailed analytics and feedback.
+- **Multilingual Support**: Access learning materials for multiple languages within a single app.
+
+---
+
+## Getting Started 🚀
+
+To explore the codebase locally, follow these steps:
+
+### Prerequisites 📋
+
+Ensure you have the following installed:
+
+- [Flutter](https://flutter.dev/) (for mobile app development)
+- [Dart](https://dart.dev/) (v2.0 or later)
+
+### Installation 💾
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/BartekDadas/LanguadorV2.git
