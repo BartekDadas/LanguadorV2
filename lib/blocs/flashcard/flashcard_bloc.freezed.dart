@@ -18,8 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$FlashcardEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -27,11 +26,17 @@ mixin _$FlashcardEvent {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -39,11 +44,17 @@ mixin _$FlashcardEvent {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -51,6 +62,12 @@ mixin _$FlashcardEvent {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -63,6 +80,9 @@ mixin _$FlashcardEvent {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -74,6 +94,9 @@ mixin _$FlashcardEvent {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -85,6 +108,9 @@ mixin _$FlashcardEvent {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -117,7 +143,7 @@ abstract class _$$LoadFlashcardsImplCopyWith<$Res> {
           $Res Function(_$LoadFlashcardsImpl) then) =
       __$$LoadFlashcardsImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String language, String difficulty});
+  $Res call({String? deckName});
 }
 
 /// @nodoc
@@ -133,18 +159,13 @@ class __$$LoadFlashcardsImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? language = null,
-    Object? difficulty = null,
+    Object? deckName = freezed,
   }) {
     return _then(_$LoadFlashcardsImpl(
-      language: null == language
-          ? _value.language
-          : language // ignore: cast_nullable_to_non_nullable
-              as String,
-      difficulty: null == difficulty
-          ? _value.difficulty
-          : difficulty // ignore: cast_nullable_to_non_nullable
-              as String,
+      deckName: freezed == deckName
+          ? _value.deckName
+          : deckName // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -152,17 +173,16 @@ class __$$LoadFlashcardsImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadFlashcardsImpl implements _LoadFlashcards {
-  const _$LoadFlashcardsImpl(
-      {required this.language, required this.difficulty});
+  const _$LoadFlashcardsImpl({this.deckName});
 
+// required String language,
+// required String difficulty,
   @override
-  final String language;
-  @override
-  final String difficulty;
+  final String? deckName;
 
   @override
   String toString() {
-    return 'FlashcardEvent.loadFlashcards(language: $language, difficulty: $difficulty)';
+    return 'FlashcardEvent.loadFlashcards(deckName: $deckName)';
   }
 
   @override
@@ -170,14 +190,12 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadFlashcardsImpl &&
-            (identical(other.language, language) ||
-                other.language == language) &&
-            (identical(other.difficulty, difficulty) ||
-                other.difficulty == difficulty));
+            (identical(other.deckName, deckName) ||
+                other.deckName == deckName));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, language, difficulty);
+  int get hashCode => Object.hash(runtimeType, deckName);
 
   /// Create a copy of FlashcardEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -191,8 +209,7 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -200,14 +217,20 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) {
-    return loadFlashcards(language, difficulty);
+    return loadFlashcards(deckName);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -215,14 +238,20 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) {
-    return loadFlashcards?.call(language, difficulty);
+    return loadFlashcards?.call(deckName);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -230,10 +259,16 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) {
     if (loadFlashcards != null) {
-      return loadFlashcards(language, difficulty);
+      return loadFlashcards(deckName);
     }
     return orElse();
   }
@@ -248,6 +283,9 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) {
     return loadFlashcards(this);
   }
@@ -262,6 +300,9 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) {
     return loadFlashcards?.call(this);
   }
@@ -276,6 +317,9 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) {
     if (loadFlashcards != null) {
@@ -286,12 +330,12 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
 }
 
 abstract class _LoadFlashcards implements FlashcardEvent {
-  const factory _LoadFlashcards(
-      {required final String language,
-      required final String difficulty}) = _$LoadFlashcardsImpl;
+  const factory _LoadFlashcards({final String? deckName}) =
+      _$LoadFlashcardsImpl;
 
-  String get language;
-  String get difficulty;
+// required String language,
+// required String difficulty,
+  String? get deckName;
 
   /// Create a copy of FlashcardEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -388,8 +432,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -397,6 +440,12 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) {
     return generateNewFlashcards(topic, language, difficulty);
   }
@@ -404,7 +453,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -412,6 +461,12 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) {
     return generateNewFlashcards?.call(topic, language, difficulty);
   }
@@ -419,7 +474,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -427,6 +482,12 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) {
     if (generateNewFlashcards != null) {
@@ -445,6 +506,9 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) {
     return generateNewFlashcards(this);
   }
@@ -459,6 +523,9 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) {
     return generateNewFlashcards?.call(this);
   }
@@ -473,6 +540,9 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) {
     if (generateNewFlashcards != null) {
@@ -568,8 +638,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -577,6 +646,12 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) {
     return markAsLearned(flashcardId);
   }
@@ -584,7 +659,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -592,6 +667,12 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) {
     return markAsLearned?.call(flashcardId);
   }
@@ -599,7 +680,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -607,6 +688,12 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) {
     if (markAsLearned != null) {
@@ -625,6 +712,9 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) {
     return markAsLearned(this);
   }
@@ -639,6 +729,9 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) {
     return markAsLearned?.call(this);
   }
@@ -653,6 +746,9 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) {
     if (markAsLearned != null) {
@@ -744,8 +840,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -753,6 +848,12 @@ class _$ReviewLaterImpl implements _ReviewLater {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) {
     return reviewLater(flashcardId);
   }
@@ -760,7 +861,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -768,6 +869,12 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) {
     return reviewLater?.call(flashcardId);
   }
@@ -775,7 +882,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -783,6 +890,12 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) {
     if (reviewLater != null) {
@@ -801,6 +914,9 @@ class _$ReviewLaterImpl implements _ReviewLater {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) {
     return reviewLater(this);
   }
@@ -815,6 +931,9 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) {
     return reviewLater?.call(this);
   }
@@ -829,6 +948,9 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) {
     if (reviewLater != null) {
@@ -932,8 +1054,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -941,6 +1062,12 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) {
     return addFlashcard(flashcard);
   }
@@ -948,7 +1075,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -956,6 +1083,12 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) {
     return addFlashcard?.call(flashcard);
   }
@@ -963,7 +1096,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -971,6 +1104,12 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) {
     if (addFlashcard != null) {
@@ -989,6 +1128,9 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) {
     return addFlashcard(this);
   }
@@ -1003,6 +1145,9 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) {
     return addFlashcard?.call(this);
   }
@@ -1017,6 +1162,9 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) {
     if (addFlashcard != null) {
@@ -1121,8 +1269,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -1130,6 +1277,12 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) {
     return putAsideFlashcard(flashcard);
   }
@@ -1137,7 +1290,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -1145,6 +1298,12 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) {
     return putAsideFlashcard?.call(flashcard);
   }
@@ -1152,7 +1311,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -1160,6 +1319,12 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) {
     if (putAsideFlashcard != null) {
@@ -1178,6 +1343,9 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) {
     return putAsideFlashcard(this);
   }
@@ -1192,6 +1360,9 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) {
     return putAsideFlashcard?.call(this);
   }
@@ -1206,6 +1377,9 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) {
     if (putAsideFlashcard != null) {
@@ -1269,8 +1443,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String language, String difficulty)
-        loadFlashcards,
+    required TResult Function(String? deckName) loadFlashcards,
     required TResult Function(String topic, String language, String difficulty)
         generateNewFlashcards,
     required TResult Function(String flashcardId) markAsLearned,
@@ -1278,6 +1451,12 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     required TResult Function(Flashcard flashcard) addFlashcard,
     required TResult Function(Flashcard flashcard) putAsideFlashcard,
     required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
   }) {
     return deleteFlashcards();
   }
@@ -1285,7 +1464,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String language, String difficulty)? loadFlashcards,
+    TResult? Function(String? deckName)? loadFlashcards,
     TResult? Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult? Function(String flashcardId)? markAsLearned,
@@ -1293,6 +1472,12 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult? Function(Flashcard flashcard)? addFlashcard,
     TResult? Function(Flashcard flashcard)? putAsideFlashcard,
     TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
   }) {
     return deleteFlashcards?.call();
   }
@@ -1300,7 +1485,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String language, String difficulty)? loadFlashcards,
+    TResult Function(String? deckName)? loadFlashcards,
     TResult Function(String topic, String language, String difficulty)?
         generateNewFlashcards,
     TResult Function(String flashcardId)? markAsLearned,
@@ -1308,6 +1493,12 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult Function(Flashcard flashcard)? addFlashcard,
     TResult Function(Flashcard flashcard)? putAsideFlashcard,
     TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
     required TResult orElse(),
   }) {
     if (deleteFlashcards != null) {
@@ -1326,6 +1517,9 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     required TResult Function(_AddFlashcard value) addFlashcard,
     required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
     required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
   }) {
     return deleteFlashcards(this);
   }
@@ -1340,6 +1534,9 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult? Function(_AddFlashcard value)? addFlashcard,
     TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
   }) {
     return deleteFlashcards?.call(this);
   }
@@ -1354,6 +1551,9 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult Function(_AddFlashcard value)? addFlashcard,
     TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
     TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
     required TResult orElse(),
   }) {
     if (deleteFlashcards != null) {
@@ -1368,11 +1568,667 @@ abstract class _DeleteFlashcard implements FlashcardEvent {
 }
 
 /// @nodoc
+abstract class _$$ChangeDeckImplCopyWith<$Res> {
+  factory _$$ChangeDeckImplCopyWith(
+          _$ChangeDeckImpl value, $Res Function(_$ChangeDeckImpl) then) =
+      __$$ChangeDeckImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String deckName});
+}
+
+/// @nodoc
+class __$$ChangeDeckImplCopyWithImpl<$Res>
+    extends _$FlashcardEventCopyWithImpl<$Res, _$ChangeDeckImpl>
+    implements _$$ChangeDeckImplCopyWith<$Res> {
+  __$$ChangeDeckImplCopyWithImpl(
+      _$ChangeDeckImpl _value, $Res Function(_$ChangeDeckImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? deckName = null,
+  }) {
+    return _then(_$ChangeDeckImpl(
+      deckName: null == deckName
+          ? _value.deckName
+          : deckName // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ChangeDeckImpl implements _ChangeDeck {
+  const _$ChangeDeckImpl({required this.deckName});
+
+  @override
+  final String deckName;
+
+  @override
+  String toString() {
+    return 'FlashcardEvent.changeDeck(deckName: $deckName)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ChangeDeckImpl &&
+            (identical(other.deckName, deckName) ||
+                other.deckName == deckName));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, deckName);
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ChangeDeckImplCopyWith<_$ChangeDeckImpl> get copyWith =>
+      __$$ChangeDeckImplCopyWithImpl<_$ChangeDeckImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? deckName) loadFlashcards,
+    required TResult Function(String topic, String language, String difficulty)
+        generateNewFlashcards,
+    required TResult Function(String flashcardId) markAsLearned,
+    required TResult Function(String flashcardId) reviewLater,
+    required TResult Function(Flashcard flashcard) addFlashcard,
+    required TResult Function(Flashcard flashcard) putAsideFlashcard,
+    required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
+  }) {
+    return changeDeck(deckName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? deckName)? loadFlashcards,
+    TResult? Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult? Function(String flashcardId)? markAsLearned,
+    TResult? Function(String flashcardId)? reviewLater,
+    TResult? Function(Flashcard flashcard)? addFlashcard,
+    TResult? Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+  }) {
+    return changeDeck?.call(deckName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? deckName)? loadFlashcards,
+    TResult Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult Function(String flashcardId)? markAsLearned,
+    TResult Function(String flashcardId)? reviewLater,
+    TResult Function(Flashcard flashcard)? addFlashcard,
+    TResult Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+    required TResult orElse(),
+  }) {
+    if (changeDeck != null) {
+      return changeDeck(deckName);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadFlashcards value) loadFlashcards,
+    required TResult Function(_GenerateFlashcards value) generateNewFlashcards,
+    required TResult Function(_MarkAsLearned value) markAsLearned,
+    required TResult Function(_ReviewLater value) reviewLater,
+    required TResult Function(_AddFlashcard value) addFlashcard,
+    required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
+    required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
+  }) {
+    return changeDeck(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadFlashcards value)? loadFlashcards,
+    TResult? Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult? Function(_MarkAsLearned value)? markAsLearned,
+    TResult? Function(_ReviewLater value)? reviewLater,
+    TResult? Function(_AddFlashcard value)? addFlashcard,
+    TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
+  }) {
+    return changeDeck?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadFlashcards value)? loadFlashcards,
+    TResult Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult Function(_MarkAsLearned value)? markAsLearned,
+    TResult Function(_ReviewLater value)? reviewLater,
+    TResult Function(_AddFlashcard value)? addFlashcard,
+    TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
+    required TResult orElse(),
+  }) {
+    if (changeDeck != null) {
+      return changeDeck(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ChangeDeck implements FlashcardEvent {
+  const factory _ChangeDeck({required final String deckName}) =
+      _$ChangeDeckImpl;
+
+  String get deckName;
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ChangeDeckImplCopyWith<_$ChangeDeckImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$LoadDeckFlashcardsImplCopyWith<$Res> {
+  factory _$$LoadDeckFlashcardsImplCopyWith(_$LoadDeckFlashcardsImpl value,
+          $Res Function(_$LoadDeckFlashcardsImpl) then) =
+      __$$LoadDeckFlashcardsImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String deckName, DeckService deckService});
+}
+
+/// @nodoc
+class __$$LoadDeckFlashcardsImplCopyWithImpl<$Res>
+    extends _$FlashcardEventCopyWithImpl<$Res, _$LoadDeckFlashcardsImpl>
+    implements _$$LoadDeckFlashcardsImplCopyWith<$Res> {
+  __$$LoadDeckFlashcardsImplCopyWithImpl(_$LoadDeckFlashcardsImpl _value,
+      $Res Function(_$LoadDeckFlashcardsImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? deckName = null,
+    Object? deckService = null,
+  }) {
+    return _then(_$LoadDeckFlashcardsImpl(
+      deckName: null == deckName
+          ? _value.deckName
+          : deckName // ignore: cast_nullable_to_non_nullable
+              as String,
+      deckService: null == deckService
+          ? _value.deckService
+          : deckService // ignore: cast_nullable_to_non_nullable
+              as DeckService,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$LoadDeckFlashcardsImpl implements _LoadDeckFlashcards {
+  const _$LoadDeckFlashcardsImpl(
+      {required this.deckName, required this.deckService});
+
+  @override
+  final String deckName;
+  @override
+  final DeckService deckService;
+
+  @override
+  String toString() {
+    return 'FlashcardEvent.loadDeckFlashcards(deckName: $deckName, deckService: $deckService)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$LoadDeckFlashcardsImpl &&
+            (identical(other.deckName, deckName) ||
+                other.deckName == deckName) &&
+            (identical(other.deckService, deckService) ||
+                other.deckService == deckService));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, deckName, deckService);
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$LoadDeckFlashcardsImplCopyWith<_$LoadDeckFlashcardsImpl> get copyWith =>
+      __$$LoadDeckFlashcardsImplCopyWithImpl<_$LoadDeckFlashcardsImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? deckName) loadFlashcards,
+    required TResult Function(String topic, String language, String difficulty)
+        generateNewFlashcards,
+    required TResult Function(String flashcardId) markAsLearned,
+    required TResult Function(String flashcardId) reviewLater,
+    required TResult Function(Flashcard flashcard) addFlashcard,
+    required TResult Function(Flashcard flashcard) putAsideFlashcard,
+    required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
+  }) {
+    return loadDeckFlashcards(deckName, deckService);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? deckName)? loadFlashcards,
+    TResult? Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult? Function(String flashcardId)? markAsLearned,
+    TResult? Function(String flashcardId)? reviewLater,
+    TResult? Function(Flashcard flashcard)? addFlashcard,
+    TResult? Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+  }) {
+    return loadDeckFlashcards?.call(deckName, deckService);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? deckName)? loadFlashcards,
+    TResult Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult Function(String flashcardId)? markAsLearned,
+    TResult Function(String flashcardId)? reviewLater,
+    TResult Function(Flashcard flashcard)? addFlashcard,
+    TResult Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+    required TResult orElse(),
+  }) {
+    if (loadDeckFlashcards != null) {
+      return loadDeckFlashcards(deckName, deckService);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadFlashcards value) loadFlashcards,
+    required TResult Function(_GenerateFlashcards value) generateNewFlashcards,
+    required TResult Function(_MarkAsLearned value) markAsLearned,
+    required TResult Function(_ReviewLater value) reviewLater,
+    required TResult Function(_AddFlashcard value) addFlashcard,
+    required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
+    required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
+  }) {
+    return loadDeckFlashcards(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadFlashcards value)? loadFlashcards,
+    TResult? Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult? Function(_MarkAsLearned value)? markAsLearned,
+    TResult? Function(_ReviewLater value)? reviewLater,
+    TResult? Function(_AddFlashcard value)? addFlashcard,
+    TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
+  }) {
+    return loadDeckFlashcards?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadFlashcards value)? loadFlashcards,
+    TResult Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult Function(_MarkAsLearned value)? markAsLearned,
+    TResult Function(_ReviewLater value)? reviewLater,
+    TResult Function(_AddFlashcard value)? addFlashcard,
+    TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
+    required TResult orElse(),
+  }) {
+    if (loadDeckFlashcards != null) {
+      return loadDeckFlashcards(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _LoadDeckFlashcards implements FlashcardEvent {
+  const factory _LoadDeckFlashcards(
+      {required final String deckName,
+      required final DeckService deckService}) = _$LoadDeckFlashcardsImpl;
+
+  String get deckName;
+  DeckService get deckService;
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$LoadDeckFlashcardsImplCopyWith<_$LoadDeckFlashcardsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SaveToDeckImplCopyWith<$Res> {
+  factory _$$SaveToDeckImplCopyWith(
+          _$SaveToDeckImpl value, $Res Function(_$SaveToDeckImpl) then) =
+      __$$SaveToDeckImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String deckName, DeckService deckService, List<Flashcard> flashcards});
+}
+
+/// @nodoc
+class __$$SaveToDeckImplCopyWithImpl<$Res>
+    extends _$FlashcardEventCopyWithImpl<$Res, _$SaveToDeckImpl>
+    implements _$$SaveToDeckImplCopyWith<$Res> {
+  __$$SaveToDeckImplCopyWithImpl(
+      _$SaveToDeckImpl _value, $Res Function(_$SaveToDeckImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? deckName = null,
+    Object? deckService = null,
+    Object? flashcards = null,
+  }) {
+    return _then(_$SaveToDeckImpl(
+      deckName: null == deckName
+          ? _value.deckName
+          : deckName // ignore: cast_nullable_to_non_nullable
+              as String,
+      deckService: null == deckService
+          ? _value.deckService
+          : deckService // ignore: cast_nullable_to_non_nullable
+              as DeckService,
+      flashcards: null == flashcards
+          ? _value._flashcards
+          : flashcards // ignore: cast_nullable_to_non_nullable
+              as List<Flashcard>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SaveToDeckImpl implements _SaveToDeck {
+  const _$SaveToDeckImpl(
+      {required this.deckName,
+      required this.deckService,
+      required final List<Flashcard> flashcards})
+      : _flashcards = flashcards;
+
+  @override
+  final String deckName;
+  @override
+  final DeckService deckService;
+  final List<Flashcard> _flashcards;
+  @override
+  List<Flashcard> get flashcards {
+    if (_flashcards is EqualUnmodifiableListView) return _flashcards;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_flashcards);
+  }
+
+  @override
+  String toString() {
+    return 'FlashcardEvent.saveToDeck(deckName: $deckName, deckService: $deckService, flashcards: $flashcards)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SaveToDeckImpl &&
+            (identical(other.deckName, deckName) ||
+                other.deckName == deckName) &&
+            (identical(other.deckService, deckService) ||
+                other.deckService == deckService) &&
+            const DeepCollectionEquality()
+                .equals(other._flashcards, _flashcards));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, deckName, deckService,
+      const DeepCollectionEquality().hash(_flashcards));
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SaveToDeckImplCopyWith<_$SaveToDeckImpl> get copyWith =>
+      __$$SaveToDeckImplCopyWithImpl<_$SaveToDeckImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? deckName) loadFlashcards,
+    required TResult Function(String topic, String language, String difficulty)
+        generateNewFlashcards,
+    required TResult Function(String flashcardId) markAsLearned,
+    required TResult Function(String flashcardId) reviewLater,
+    required TResult Function(Flashcard flashcard) addFlashcard,
+    required TResult Function(Flashcard flashcard) putAsideFlashcard,
+    required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
+  }) {
+    return saveToDeck(deckName, deckService, flashcards);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? deckName)? loadFlashcards,
+    TResult? Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult? Function(String flashcardId)? markAsLearned,
+    TResult? Function(String flashcardId)? reviewLater,
+    TResult? Function(Flashcard flashcard)? addFlashcard,
+    TResult? Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+  }) {
+    return saveToDeck?.call(deckName, deckService, flashcards);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? deckName)? loadFlashcards,
+    TResult Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult Function(String flashcardId)? markAsLearned,
+    TResult Function(String flashcardId)? reviewLater,
+    TResult Function(Flashcard flashcard)? addFlashcard,
+    TResult Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+    required TResult orElse(),
+  }) {
+    if (saveToDeck != null) {
+      return saveToDeck(deckName, deckService, flashcards);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadFlashcards value) loadFlashcards,
+    required TResult Function(_GenerateFlashcards value) generateNewFlashcards,
+    required TResult Function(_MarkAsLearned value) markAsLearned,
+    required TResult Function(_ReviewLater value) reviewLater,
+    required TResult Function(_AddFlashcard value) addFlashcard,
+    required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
+    required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
+  }) {
+    return saveToDeck(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadFlashcards value)? loadFlashcards,
+    TResult? Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult? Function(_MarkAsLearned value)? markAsLearned,
+    TResult? Function(_ReviewLater value)? reviewLater,
+    TResult? Function(_AddFlashcard value)? addFlashcard,
+    TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
+  }) {
+    return saveToDeck?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadFlashcards value)? loadFlashcards,
+    TResult Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult Function(_MarkAsLearned value)? markAsLearned,
+    TResult Function(_ReviewLater value)? reviewLater,
+    TResult Function(_AddFlashcard value)? addFlashcard,
+    TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
+    required TResult orElse(),
+  }) {
+    if (saveToDeck != null) {
+      return saveToDeck(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SaveToDeck implements FlashcardEvent {
+  const factory _SaveToDeck(
+      {required final String deckName,
+      required final DeckService deckService,
+      required final List<Flashcard> flashcards}) = _$SaveToDeckImpl;
+
+  String get deckName;
+  DeckService get deckService;
+  List<Flashcard> get flashcards;
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SaveToDeckImplCopyWith<_$SaveToDeckImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$FlashcardState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  String get language => throw _privateConstructorUsedError;
+  String get difficulty => throw _privateConstructorUsedError;
+  List<Flashcard>? get generated => throw _privateConstructorUsedError;
   List<Flashcard>? get flashcards => throw _privateConstructorUsedError;
   List<Flashcard>? get learned => throw _privateConstructorUsedError;
+  String get deckName => throw _privateConstructorUsedError;
 
   /// Create a copy of FlashcardState
   /// with the given fields replaced by the non-null parameter values.
@@ -1390,8 +2246,12 @@ abstract class $FlashcardStateCopyWith<$Res> {
   $Res call(
       {bool isLoading,
       String? error,
+      String language,
+      String difficulty,
+      List<Flashcard>? generated,
       List<Flashcard>? flashcards,
-      List<Flashcard>? learned});
+      List<Flashcard>? learned,
+      String deckName});
 }
 
 /// @nodoc
@@ -1411,8 +2271,12 @@ class _$FlashcardStateCopyWithImpl<$Res, $Val extends FlashcardState>
   $Res call({
     Object? isLoading = null,
     Object? error = freezed,
+    Object? language = null,
+    Object? difficulty = null,
+    Object? generated = freezed,
     Object? flashcards = freezed,
     Object? learned = freezed,
+    Object? deckName = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -1423,6 +2287,18 @@ class _$FlashcardStateCopyWithImpl<$Res, $Val extends FlashcardState>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      language: null == language
+          ? _value.language
+          : language // ignore: cast_nullable_to_non_nullable
+              as String,
+      difficulty: null == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as String,
+      generated: freezed == generated
+          ? _value.generated
+          : generated // ignore: cast_nullable_to_non_nullable
+              as List<Flashcard>?,
       flashcards: freezed == flashcards
           ? _value.flashcards
           : flashcards // ignore: cast_nullable_to_non_nullable
@@ -1431,6 +2307,10 @@ class _$FlashcardStateCopyWithImpl<$Res, $Val extends FlashcardState>
           ? _value.learned
           : learned // ignore: cast_nullable_to_non_nullable
               as List<Flashcard>?,
+      deckName: null == deckName
+          ? _value.deckName
+          : deckName // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -1446,8 +2326,12 @@ abstract class _$$FlashcardStateImplCopyWith<$Res>
   $Res call(
       {bool isLoading,
       String? error,
+      String language,
+      String difficulty,
+      List<Flashcard>? generated,
       List<Flashcard>? flashcards,
-      List<Flashcard>? learned});
+      List<Flashcard>? learned,
+      String deckName});
 }
 
 /// @nodoc
@@ -1465,8 +2349,12 @@ class __$$FlashcardStateImplCopyWithImpl<$Res>
   $Res call({
     Object? isLoading = null,
     Object? error = freezed,
+    Object? language = null,
+    Object? difficulty = null,
+    Object? generated = freezed,
     Object? flashcards = freezed,
     Object? learned = freezed,
+    Object? deckName = null,
   }) {
     return _then(_$FlashcardStateImpl(
       isLoading: null == isLoading
@@ -1477,6 +2365,18 @@ class __$$FlashcardStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String?,
+      language: null == language
+          ? _value.language
+          : language // ignore: cast_nullable_to_non_nullable
+              as String,
+      difficulty: null == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as String,
+      generated: freezed == generated
+          ? _value._generated
+          : generated // ignore: cast_nullable_to_non_nullable
+              as List<Flashcard>?,
       flashcards: freezed == flashcards
           ? _value._flashcards
           : flashcards // ignore: cast_nullable_to_non_nullable
@@ -1485,6 +2385,10 @@ class __$$FlashcardStateImplCopyWithImpl<$Res>
           ? _value._learned
           : learned // ignore: cast_nullable_to_non_nullable
               as List<Flashcard>?,
+      deckName: null == deckName
+          ? _value.deckName
+          : deckName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -1495,9 +2399,14 @@ class _$FlashcardStateImpl implements _FlashcardState {
   const _$FlashcardStateImpl(
       {this.isLoading = false,
       this.error,
+      this.language = 'en',
+      this.difficulty = 'beginner',
+      final List<Flashcard>? generated,
       final List<Flashcard>? flashcards,
-      final List<Flashcard>? learned})
-      : _flashcards = flashcards,
+      final List<Flashcard>? learned,
+      this.deckName = 'all'})
+      : _generated = generated,
+        _flashcards = flashcards,
         _learned = learned;
 
   @override
@@ -1505,6 +2414,22 @@ class _$FlashcardStateImpl implements _FlashcardState {
   final bool isLoading;
   @override
   final String? error;
+  @override
+  @JsonKey()
+  final String language;
+  @override
+  @JsonKey()
+  final String difficulty;
+  final List<Flashcard>? _generated;
+  @override
+  List<Flashcard>? get generated {
+    final value = _generated;
+    if (value == null) return null;
+    if (_generated is EqualUnmodifiableListView) return _generated;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<Flashcard>? _flashcards;
   @override
   List<Flashcard>? get flashcards {
@@ -1526,8 +2451,12 @@ class _$FlashcardStateImpl implements _FlashcardState {
   }
 
   @override
+  @JsonKey()
+  final String deckName;
+
+  @override
   String toString() {
-    return 'FlashcardState(isLoading: $isLoading, error: $error, flashcards: $flashcards, learned: $learned)';
+    return 'FlashcardState(isLoading: $isLoading, error: $error, language: $language, difficulty: $difficulty, generated: $generated, flashcards: $flashcards, learned: $learned, deckName: $deckName)';
   }
 
   @override
@@ -1538,9 +2467,17 @@ class _$FlashcardStateImpl implements _FlashcardState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             (identical(other.error, error) || other.error == error) &&
+            (identical(other.language, language) ||
+                other.language == language) &&
+            (identical(other.difficulty, difficulty) ||
+                other.difficulty == difficulty) &&
+            const DeepCollectionEquality()
+                .equals(other._generated, _generated) &&
             const DeepCollectionEquality()
                 .equals(other._flashcards, _flashcards) &&
-            const DeepCollectionEquality().equals(other._learned, _learned));
+            const DeepCollectionEquality().equals(other._learned, _learned) &&
+            (identical(other.deckName, deckName) ||
+                other.deckName == deckName));
   }
 
   @override
@@ -1548,8 +2485,12 @@ class _$FlashcardStateImpl implements _FlashcardState {
       runtimeType,
       isLoading,
       error,
+      language,
+      difficulty,
+      const DeepCollectionEquality().hash(_generated),
       const DeepCollectionEquality().hash(_flashcards),
-      const DeepCollectionEquality().hash(_learned));
+      const DeepCollectionEquality().hash(_learned),
+      deckName);
 
   /// Create a copy of FlashcardState
   /// with the given fields replaced by the non-null parameter values.
@@ -1565,17 +2506,29 @@ abstract class _FlashcardState implements FlashcardState {
   const factory _FlashcardState(
       {final bool isLoading,
       final String? error,
+      final String language,
+      final String difficulty,
+      final List<Flashcard>? generated,
       final List<Flashcard>? flashcards,
-      final List<Flashcard>? learned}) = _$FlashcardStateImpl;
+      final List<Flashcard>? learned,
+      final String deckName}) = _$FlashcardStateImpl;
 
   @override
   bool get isLoading;
   @override
   String? get error;
   @override
+  String get language;
+  @override
+  String get difficulty;
+  @override
+  List<Flashcard>? get generated;
+  @override
   List<Flashcard>? get flashcards;
   @override
   List<Flashcard>? get learned;
+  @override
+  String get deckName;
 
   /// Create a copy of FlashcardState
   /// with the given fields replaced by the non-null parameter values.

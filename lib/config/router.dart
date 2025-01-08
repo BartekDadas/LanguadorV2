@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languador/screens/game_modes/game_modes_screen.dart';
@@ -10,6 +11,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/navigation_screen.dart';
 import '../screens/flashcards/flashcard_screen.dart';
+import '../services/ai_service.dart';
 import '../services/auth_service.dart';
 import '../blocs/flashcard/flashcard_bloc.dart';
 
@@ -75,11 +77,8 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: '/flashcards',
-              builder: (context, state) => FlashcardScreen(
-                  language: state.uri.queryParameters['language'] ?? 'en',
-                  difficulty: state.uri.queryParameters['difficulty'] ?? 'beginner',
-                ),
-              ),
+              builder: (context, state) =>  FlashcardScreen(),
+            ),
           ],
         ),
         // Profile branch

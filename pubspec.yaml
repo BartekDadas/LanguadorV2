@@ -35,7 +35,7 @@ dependencies:
   # Game Engine
   flame: ^1.22.0
 #  flame_audio: ^2.10.6
-  
+
   # State Management
   provider: ^6.1.1
   flutter_bloc: ^8.1.3

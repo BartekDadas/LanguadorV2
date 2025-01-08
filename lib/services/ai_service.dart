@@ -23,6 +23,7 @@ class AIService {
     String nativeLanguage = 'English'
   }) async {
     try {
+
       final response = await _client.post(
         Uri.parse('$baseUrl/generate_flashcards'),
         headers: {'Content-Type': 'application/json'},
@@ -37,7 +38,7 @@ class AIService {
       print(response.body);
       if (response.statusCode == 200) {
         // print(response.body);
-        final List<dynamic> data = json.decode(response.body)['response'];
+        final List<dynamic> data = json.decode(response.body)['result'];
         print(data);
         return data.map((json) => stringToFlashcard(json, targetLanguage))
             .toList();

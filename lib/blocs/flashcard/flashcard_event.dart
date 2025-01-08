@@ -3,8 +3,9 @@ part of 'flashcard_bloc.dart';
 @freezed
 class FlashcardEvent with _$FlashcardEvent {
   const factory FlashcardEvent.loadFlashcards({
-    required String language,
-    required String difficulty,
+    // required String language,
+    // required String difficulty,
+    String? deckName,
   }) = _LoadFlashcards;
 
   const factory FlashcardEvent.generateNewFlashcards({
@@ -31,4 +32,18 @@ class FlashcardEvent with _$FlashcardEvent {
 
   const factory FlashcardEvent.deleteFlashcards() = _DeleteFlashcard;
 
+  const factory FlashcardEvent.changeDeck({
+    required String deckName,
+  }) = _ChangeDeck;
+
+  const factory FlashcardEvent.loadDeckFlashcards({
+    required String deckName,
+    required DeckService deckService,
+  }) = _LoadDeckFlashcards;
+
+  const factory FlashcardEvent.saveToDeck({
+    required String deckName,
+    required DeckService deckService,
+    required List<Flashcard> flashcards,
+  }) = _SaveToDeck;
 }
