@@ -185,7 +185,12 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
 
       final updatedFlashcards = List<Flashcard>.from(state.flashcards!)
         ..remove(reviewedFlashcard);
-      
+
+      // final updatedFlashcards = List<Flashcard>.from(state.flashcards!)
+      //   ..add(reviewedFlashcard);
+
+      // final generatedFlashcards = state.generated ?? [];
+
       await _storageService.saveFlashcards(updatedFlashcards, deckName);
       await _storageService.saveLearnedFlashcards(
         List.from(state.learned ?? [])..add(reviewedFlashcard),
@@ -203,20 +208,25 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
     _AddFlashcard event,
     Emitter<FlashcardState> emit,
   ) async {
-    final response = await FlashCardsProvider().addFlashCardToBase(event.flashcard);
-    if (response && state.flashcards != null) {
+    // final response = await FlashCardsProvider().addFlashCardToBase(event.flashcard);
+    print('add flashcard event called');
+    if (state.generated != null) { //& response
       final updatedFlashcards = List<Flashcard>.from(state.flashcards!)
+        ..add(event.flashcard);
+
+      final updatedGenerated = List<Flashcard>.from(state.generated!)
         ..remove(event.flashcard);
 
       final deckName = state.deckName;
 
-      await _storageService.saveFlashcards(updatedFlashcards, deckName);
+      // await _storageService.saveFlashcards(updatedFlashcards, deckName);
       // await _storageService.saveLearnedFlashcards(
       //   List.from(state.learned ?? [])..add(event.flashcard),
       //   deckName,
       // );
-      
+      print(updatedFlashcards.length);
       emit(state.copyWith(
+        generated: updatedGenerated.isEmpty? null : updatedGenerated,
         flashcards: updatedFlashcards,
         learned: List.from(state.learned ?? [])..add(event.flashcard),
       ));
@@ -227,20 +237,21 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
     _PutAsideFlashcard event,
     Emitter<FlashcardState> emit,
   ) async {
-    if (state.flashcards != null) {
-      final updatedFlashcards = List<Flashcard>.from(state.flashcards!)
+    print('put aside event called');
+    if (state.generated != null) {
+      final updatedFlashcards = List<Flashcard>.from(state.generated!)
         ..remove(event.flashcard);
       
-      final updatedLearned = List<Flashcard>.from(state.learned ?? [])..add(event.flashcard);
+      final updatedPutAside = List<Flashcard>.from(state.putAside ?? [])..add(event.flashcard);
 
       final deckName = state.deckName;
 
-      await _storageService.saveFlashcards(updatedFlashcards, deckName);
-      await _storageService.saveLearnedFlashcards(updatedLearned, deckName);
-      
+      // await _storageService.saveFlashcards(updatedFlashcards, deckName);
+      // await _storageService.saveLearnedFlashcards(updatedLearned, deckName);
+      print(updatedFlashcards.length);
       emit(state.copyWith(
-        flashcards: updatedFlashcards.isEmpty ? [] : updatedFlashcards,
-        learned: updatedLearned,
+        generated: updatedFlashcards.isEmpty? null : updatedFlashcards,
+        putAside: updatedPutAside,
       ));
     }
   }

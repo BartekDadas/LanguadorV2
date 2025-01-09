@@ -23,7 +23,7 @@ class AIService {
     String nativeLanguage = 'English'
   }) async {
     try {
-
+      print('Target Language $targetLanguage');
       final response = await _client.post(
         Uri.parse('$baseUrl/generate_flashcards'),
         headers: {'Content-Type': 'application/json'},

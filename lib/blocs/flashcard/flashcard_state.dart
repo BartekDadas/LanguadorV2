@@ -10,6 +10,7 @@ class FlashcardState with _$FlashcardState {
     List<Flashcard>? generated,
     List<Flashcard>? flashcards,
     List<Flashcard>? learned,
+    List<Flashcard>? putAside,
     @Default('all') String deckName,
   }) = _FlashcardState;
 }

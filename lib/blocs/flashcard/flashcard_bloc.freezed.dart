@@ -2228,6 +2228,7 @@ mixin _$FlashcardState {
   List<Flashcard>? get generated => throw _privateConstructorUsedError;
   List<Flashcard>? get flashcards => throw _privateConstructorUsedError;
   List<Flashcard>? get learned => throw _privateConstructorUsedError;
+  List<Flashcard>? get putAside => throw _privateConstructorUsedError;
   String get deckName => throw _privateConstructorUsedError;
 
   /// Create a copy of FlashcardState
@@ -2251,6 +2252,7 @@ abstract class $FlashcardStateCopyWith<$Res> {
       List<Flashcard>? generated,
       List<Flashcard>? flashcards,
       List<Flashcard>? learned,
+      List<Flashcard>? putAside,
       String deckName});
 }
 
@@ -2276,6 +2278,7 @@ class _$FlashcardStateCopyWithImpl<$Res, $Val extends FlashcardState>
     Object? generated = freezed,
     Object? flashcards = freezed,
     Object? learned = freezed,
+    Object? putAside = freezed,
     Object? deckName = null,
   }) {
     return _then(_value.copyWith(
@@ -2307,6 +2310,10 @@ class _$FlashcardStateCopyWithImpl<$Res, $Val extends FlashcardState>
           ? _value.learned
           : learned // ignore: cast_nullable_to_non_nullable
               as List<Flashcard>?,
+      putAside: freezed == putAside
+          ? _value.putAside
+          : putAside // ignore: cast_nullable_to_non_nullable
+              as List<Flashcard>?,
       deckName: null == deckName
           ? _value.deckName
           : deckName // ignore: cast_nullable_to_non_nullable
@@ -2331,6 +2338,7 @@ abstract class _$$FlashcardStateImplCopyWith<$Res>
       List<Flashcard>? generated,
       List<Flashcard>? flashcards,
       List<Flashcard>? learned,
+      List<Flashcard>? putAside,
       String deckName});
 }
 
@@ -2354,6 +2362,7 @@ class __$$FlashcardStateImplCopyWithImpl<$Res>
     Object? generated = freezed,
     Object? flashcards = freezed,
     Object? learned = freezed,
+    Object? putAside = freezed,
     Object? deckName = null,
   }) {
     return _then(_$FlashcardStateImpl(
@@ -2385,6 +2394,10 @@ class __$$FlashcardStateImplCopyWithImpl<$Res>
           ? _value._learned
           : learned // ignore: cast_nullable_to_non_nullable
               as List<Flashcard>?,
+      putAside: freezed == putAside
+          ? _value._putAside
+          : putAside // ignore: cast_nullable_to_non_nullable
+              as List<Flashcard>?,
       deckName: null == deckName
           ? _value.deckName
           : deckName // ignore: cast_nullable_to_non_nullable
@@ -2404,10 +2417,12 @@ class _$FlashcardStateImpl implements _FlashcardState {
       final List<Flashcard>? generated,
       final List<Flashcard>? flashcards,
       final List<Flashcard>? learned,
+      final List<Flashcard>? putAside,
       this.deckName = 'all'})
       : _generated = generated,
         _flashcards = flashcards,
-        _learned = learned;
+        _learned = learned,
+        _putAside = putAside;
 
   @override
   @JsonKey()
@@ -2450,13 +2465,23 @@ class _$FlashcardStateImpl implements _FlashcardState {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<Flashcard>? _putAside;
+  @override
+  List<Flashcard>? get putAside {
+    final value = _putAside;
+    if (value == null) return null;
+    if (_putAside is EqualUnmodifiableListView) return _putAside;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   @JsonKey()
   final String deckName;
 
   @override
   String toString() {
-    return 'FlashcardState(isLoading: $isLoading, error: $error, language: $language, difficulty: $difficulty, generated: $generated, flashcards: $flashcards, learned: $learned, deckName: $deckName)';
+    return 'FlashcardState(isLoading: $isLoading, error: $error, language: $language, difficulty: $difficulty, generated: $generated, flashcards: $flashcards, learned: $learned, putAside: $putAside, deckName: $deckName)';
   }
 
   @override
@@ -2476,6 +2501,7 @@ class _$FlashcardStateImpl implements _FlashcardState {
             const DeepCollectionEquality()
                 .equals(other._flashcards, _flashcards) &&
             const DeepCollectionEquality().equals(other._learned, _learned) &&
+            const DeepCollectionEquality().equals(other._putAside, _putAside) &&
             (identical(other.deckName, deckName) ||
                 other.deckName == deckName));
   }
@@ -2490,6 +2516,7 @@ class _$FlashcardStateImpl implements _FlashcardState {
       const DeepCollectionEquality().hash(_generated),
       const DeepCollectionEquality().hash(_flashcards),
       const DeepCollectionEquality().hash(_learned),
+      const DeepCollectionEquality().hash(_putAside),
       deckName);
 
   /// Create a copy of FlashcardState
@@ -2511,6 +2538,7 @@ abstract class _FlashcardState implements FlashcardState {
       final List<Flashcard>? generated,
       final List<Flashcard>? flashcards,
       final List<Flashcard>? learned,
+      final List<Flashcard>? putAside,
       final String deckName}) = _$FlashcardStateImpl;
 
   @override
@@ -2527,6 +2555,8 @@ abstract class _FlashcardState implements FlashcardState {
   List<Flashcard>? get flashcards;
   @override
   List<Flashcard>? get learned;
+  @override
+  List<Flashcard>? get putAside;
   @override
   String get deckName;
 

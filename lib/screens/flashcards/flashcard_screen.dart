@@ -7,6 +7,7 @@ import 'package:languador/services/auth_service.dart';
 import 'package:languador/widgets/refresh_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../blocs/flashcard/flashcard_bloc.dart';
+import '../../blocs/flashcard/flashcard_cubit.dart';
 import '../../models/flashcard.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/deck_service.dart';
@@ -18,6 +19,7 @@ class FlashcardScreen extends StatelessWidget {
   // final String language;
   // final String difficulty;
   final TextEditingController inputController = TextEditingController();
+  final FlashcardCubit _flashcardCubit = FlashcardCubit();
 
   FlashcardScreen({
     // required this.language,
@@ -67,8 +69,11 @@ class FlashcardScreen extends StatelessWidget {
       ),
     );
 
-    return BlocProvider.value(
-      value: bloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: bloc),
+        BlocProvider.value(value: _flashcardCubit),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Column(
@@ -158,12 +163,12 @@ class FlashcardScreen extends StatelessWidget {
                     child: IconButton(
                       icon: const Icon(Icons.close, color: Colors.grey),
                       onPressed: () {
-                        context.read<FlashcardBloc>().add(
-                          FlashcardEvent.loadFlashcards(
-                            // language: state.language,
-                            // difficulty: state.difficulty,
-                          ),
-                        );
+                        // context.read<FlashcardBloc>().add(
+                          // FlashcardEvent.loadFlashcards(
+                          //   // language: state.language,
+                          //   // difficulty: state.difficulty,
+                          // ),
+                        // );
                       },
                     ),
                   ),
@@ -287,9 +292,7 @@ class FlashcardScreen extends StatelessWidget {
             onPressed: () {
               final bloc = context.read<FlashcardBloc>();
               bloc.add(
-                FlashcardEvent.loadFlashcards(
-                  // language: bloc.state.language,
-                  // difficulty: bloc.state.difficulty,
+                const FlashcardEvent.loadFlashcards(
                 ),
               );
             },
@@ -326,101 +329,125 @@ class FlashcardScreen extends StatelessWidget {
   }
 
   Widget _buildCard(Flashcard flashcard, BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Card(
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: LinearGradient(
-              colors: [
-                Theme.of(context).primaryColor.withOpacity(0.8),
-                Theme.of(context).primaryColor,
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+    return BlocBuilder<FlashcardCubit, FlashcardCubitState>(
+      builder: (context, flipState) {
+        return GestureDetector(
+          onTap: () => context.read<FlashcardCubit>().toggleCard(flashcard.id),
+          child: TweenAnimationBuilder(
+            tween: Tween<double>(
+              begin: 0,
+              end: flipState.flippedCards[flashcard.id] ?? false ? 180 : 0,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).primaryColor.withOpacity(0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 16,
-                right: 16,
-                child: Icon(
-                  Icons.flip,
-                  color: Colors.white.withOpacity(0.3),
-                  size: 24,
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (flashcard.imageUrl != null)
-                    Expanded(
-                      flex: 2,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          flashcard.imageUrl!,
-                          fit: BoxFit.cover,
-                        ),
+            duration: const Duration(milliseconds: 300),
+            builder: (context, double value, child) {
+              var content = value >= 90 ? flashcard.back : flashcard.front;
+              return Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001)
+                  ..rotateY((value * 3.1415927 / 180)),
+                child: Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(24.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).primaryColor.withOpacity(0.8),
+                          Theme.of(context).primaryColor,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                          blurRadius: 15,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
                     ),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    flex: 3,
-                    child: Center(
-                      child: Text(
-                        flashcard.front,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 16,
+                          right: 16,
+                          child: Icon(
+                            Icons.flip,
+                            color: Colors.white.withOpacity(0.3),
+                            size: 24,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (flashcard.imageUrl != null && !flipState.flippedCards[flashcard.id]!)
+                              Expanded(
+                                flex: 2,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    flashcard.imageUrl!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(height: 20),
+                            Expanded(
+                              flex: 3,
+                              child: Center(
+                                child: Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.identity()
+                                    ..rotateY(value >= 90 ? 3.1415927 : 0),
+                                  child: Text(
+                                    content,
+                                    style: const TextStyle(
+                                      fontSize: 28,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (flashcard.example != null && !(flipState.flippedCards[flashcard.id] ?? false))
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    flashcard.example!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  if (flashcard.example != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          flashcard.example!,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                            height: 1.4,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ],
+                ),
+              );
+            },
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -470,12 +497,15 @@ class FlashcardScreen extends StatelessWidget {
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
+    print('${context.read<FlashcardBloc>().state.generated![previousIndex]}');
     if (currentIndex == null) return false;
     final bloc = context.read<FlashcardBloc>();
     final flashcard = bloc.state.generated![previousIndex];
     if (direction == CardSwiperDirection.right) {
+      print('right');
       bloc.add(FlashcardEvent.addFlashcard(flashcard: flashcard));
     } else if (direction == CardSwiperDirection.left) {
+      print('left');
       bloc.add(FlashcardEvent.putAsideFlashcard(flashcard: flashcard));
     }
     return true;
