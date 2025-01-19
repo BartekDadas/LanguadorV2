@@ -63,7 +63,7 @@ class FlashcardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = GetIt.I.get<FlashcardBloc>()..add(
-      FlashcardEvent.loadFlashcards(
+      const FlashcardEvent.loadFlashcards(
         // language: _getIt.get<AuthService>().currentUser? .code ?? 'en',
         // difficulty: _getIt.get<AuthProvider>().user?.level == 1? 'beginner' : '',
       ),
@@ -95,6 +95,22 @@ class FlashcardScreen extends StatelessWidget {
           actions: [
             BlocBuilder<FlashcardBloc, FlashcardState>(
               builder: (context, state) => IconButton(
+                icon: state.isLoading 
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.refresh),
+                onPressed: state.isLoading
+                    ? null 
+                    : () => context.read<FlashcardBloc>().add(
+                          const FlashcardEvent.loadFlashcards(),
+                        ),
+              ),
+            ),
+            BlocBuilder<FlashcardBloc, FlashcardState>(
+              builder: (context, state) => IconButton(
                 icon: const Icon(Icons.folder_copy_sharp),
                 onPressed: () async {
                   bool isContextMounted() => context.mounted;
@@ -109,160 +125,379 @@ class FlashcardScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: BlocBuilder<FlashcardBloc, FlashcardState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state.error != null) {
+        body: BlocConsumer<FlashcardBloc, FlashcardState>(
+          listener: (context, state) {
+            if (state.error != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
+                  content: Text(state.error!),
                   backgroundColor: Colors.red,
-                  content: Text(state.error!, style: const TextStyle(color: Colors.white)),
+                  action: SnackBarAction(
+                    label: 'Retry',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      context.read<FlashcardBloc>().add(
+                        const FlashcardEvent.loadFlashcards(),
+                      );
+                    },
+                  ),
                 ),
               );
-              return RefreshView(
-                onRefresh: () async {
-                  context.read<FlashcardBloc>().add(
-                    FlashcardEvent.loadFlashcards(
-                      // language: state.language,
-                      // difficulty: state.difficulty,
-                    ),
-                  );
-                },
-                child: Align(child: Text(state.error!)),
+            }
+          },
+          builder: (context, state) {
+            if (state.isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
             }
 
+            // Show generated flashcards in a separate view
             if (state.generated != null && state.generated!.isNotEmpty) {
-              return Stack(
+              final cards = state.generated!;
+              print(cards.length);
+              if (cards.isEmpty) {
+                // Return to the main flashcards view when no generated cards are left
+                context.read<FlashcardBloc>().add(
+                  const FlashcardEvent.loadFlashcards(),
+                );
+                return const Center(child: CircularProgressIndicator());
+              }
+              return Column(
                 children: [
-                  Column(
-                    children: [
-                      Expanded(
-                        child: CardSwiper(
-                          onEnd: () {},
-                          cardsCount: state.generated!.length,
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        if (cards.isNotEmpty) CardSwiper(
+                          numberOfCardsDisplayed: () {
+                            final result = cards.length > 1 ? 2 : 1;
+                            print("${cards.length} > 1 ? 2 : 1 = $result");
+                            return result;
+                          }(),
+                          cardsCount: cards.length,
                           controller: context.read<FlashcardBloc>().cardController,
                           cardBuilder: (context, index, horizontalOffsetPercentage, verticalOffsetPercentage) {
-                            return _buildCard(state.generated![index], context);
+                            if (index >= cards.length) {
+                              return const SizedBox.shrink();
+                            }
+                            return _buildCard(cards[index], context);
                           },
-                          onSwipe: (previousIndex, currentIndex, direction) => _onSwipe(
-                            context,
-                            previousIndex,
-                            currentIndex,
-                            direction,
+                          allowedSwipeDirection: const AllowedSwipeDirection.symmetric(horizontal: true),
+                          onSwipe: (previousIndex, currentIndex, direction) =>
+                            _onSwipe(
+                              context,
+                              previousIndex,
+                              currentIndex,
+                              direction,
+                            ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * 0.05,
+                            vertical: MediaQuery.of(context).size.height * 0.02,
                           ),
                         ),
-                      ),
-                      _buildControlButtons(),
-                    ],
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: IconButton(
-                      icon: const Icon(Icons.close, color: Colors.grey),
-                      onPressed: () {
-                        // context.read<FlashcardBloc>().add(
-                          // FlashcardEvent.loadFlashcards(
-                          //   // language: state.language,
-                          //   // difficulty: state.difficulty,
-                          // ),
-                        // );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            }
-
-            return SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextField(
-                          controller: inputController,
-                          decoration: InputDecoration(
-                            hintText: 'What new words would you like to study?',
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 16.0,
+                        // Instructions card at the top
+                        Positioned(
+                          top: 16,
+                          left: 16,
+                          right: 16,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                              borderSide: BorderSide(
-                                color: Theme.of(context).primaryColor,
-                                width: 2.0,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12.0,
-                              vertical: 16.0,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        SizedBox(
-                          height: 50.0,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // final textController = TextEditingController();
-                              if (inputController.text.trim().isNotEmpty) {
-                                print('Clicked');
-                                context.read<FlashcardBloc>().add(
-                                  FlashcardEvent.generateNewFlashcards(
-                                    topic: inputController.text.trim(),
-                                    language: state.language,
-                                    difficulty: state.difficulty,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.swipe, color: Colors.white),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Swipe or use buttons below to manage cards',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
                                   ),
-                                );
-                                inputController.clear();
-                              }
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: IconButton(
+                            icon: const Icon(Icons.close, color: Colors.grey),
+                            onPressed: () {
+                              context.read<FlashcardBloc>().add(
+                                const FlashcardEvent.loadFlashcards(),
+                              );
                             },
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32.0,
-                                vertical: 12.0,
-                              ),
-                              elevation: 2,
-                            ),
-                            child: const Text(
-                              'Generate',
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    child: state.flashcards == null || state.flashcards!.isEmpty
-                        ? _buildEmptyState(context)
-                        : _buildFlashcards(state.flashcards!, context),
+                  // Control buttons at the bottom
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildActionButton(
+                          context,
+                          Icons.close,
+                          Colors.red,
+                          () {
+                            if (cards.isNotEmpty) {
+                              context.read<FlashcardBloc>().add(
+                                FlashcardEvent.putAsideFlashcard(
+                                  flashcard: cards[state.currentIndex],
+                                ),
+                              );
+                            }
+                          },
+                          'Discard',
+                        ),
+                        _buildActionButton(
+                          context,
+                          Icons.add,
+                          Colors.green,
+                          () {
+                            if (cards.isNotEmpty) {
+                              context.read<FlashcardBloc>().add(
+                                FlashcardEvent.addFlashcard(
+                                  flashcard: cards[state.currentIndex],
+                                ),
+                              );
+                            }
+                          },
+                          'Add to Deck',
+                        ),
+                      ],
+                    ),
                   ),
                 ],
+              );
+            }
+
+            if (state.flashcards?.isEmpty ?? true) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('No flashcards available'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<FlashcardBloc>().add(
+                          const FlashcardEvent.loadFlashcards(),
+                        );
+                      },
+                      child: const Text('Refresh'),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            // Combine both generated and regular flashcards
+            final allCards = state.flashcards ?? [];
+
+            if (allCards.isNotEmpty) {
+              if (allCards.isEmpty) {
+                context.read<FlashcardBloc>().add(
+                  const FlashcardEvent.loadFlashcards(),
+                );
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<FlashcardBloc>().add(
+                    const FlashcardEvent.loadFlashcards(),
+                  );
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextField(
+                            controller: inputController,
+                            decoration: InputDecoration(
+                              hintText: 'What new words would you like to study?',
+                              hintStyle: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16.0,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          SizedBox(
+                            height: 50.0,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (inputController.text.trim().isNotEmpty) {
+                                  context.read<FlashcardBloc>().add(
+                                    FlashcardEvent.generateNewFlashcards(
+                                      topic: inputController.text.trim(),
+                                      language: state.language,
+                                      difficulty: state.difficulty,
+                                    ),
+                                  );
+                                  inputController.clear();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32.0,
+                                  vertical: 12.0,
+                                ),
+                                elevation: 2,
+                              ),
+                              child: const Text(
+                                'Generate',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: _buildFlashcards(allCards, context),
+                    ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<FlashcardBloc>().add(
+                  const FlashcardEvent.loadFlashcards(),
+                );
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextField(
+                            controller: inputController,
+                            decoration: InputDecoration(
+                              hintText: 'What new words would you like to study?',
+                              hintStyle: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16.0,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16.0),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          SizedBox(
+                            height: 50.0,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // final textController = TextEditingController();
+                                if (inputController.text.trim().isNotEmpty) {
+                                  print('Clicked');
+                                  context.read<FlashcardBloc>().add(
+                                    FlashcardEvent.generateNewFlashcards(
+                                      topic: inputController.text.trim(),
+                                      language: state.language,
+                                      difficulty: state.difficulty,
+                                    ),
+                                  );
+                                  inputController.clear();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32.0,
+                                  vertical: 12.0,
+                                ),
+                                elevation: 2,
+                              ),
+                              child: const Text(
+                                'Generate',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: state.flashcards == null || state.flashcards!.isEmpty
+                          ? _buildEmptyState(context)
+                          : _buildFlashcards(state.flashcards!, context),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -305,23 +540,41 @@ class FlashcardScreen extends StatelessWidget {
   }
 
   Widget _buildFlashcards(List<Flashcard> flashcards, BuildContext context) {
+    if (flashcards.isEmpty) {
+      context.read<FlashcardBloc>().add(
+        const FlashcardEvent.loadFlashcards(),
+      );
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Column(
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.6,
           child: CardSwiper(
-            onEnd: () {},
+            numberOfCardsDisplayed: 1,
+            onEnd: () {
+              context.read<FlashcardBloc>().add(
+                const FlashcardEvent.loadFlashcards(),
+              );
+            },
             cardsCount: flashcards.length,
             controller: context.read<FlashcardBloc>().cardController,
             cardBuilder: (context, index, horizontalOffsetPercentage, verticalOffsetPercentage) {
+              if (index >= flashcards.length) {
+                return const SizedBox.shrink();
+              }
               return _buildCard(flashcards[index], context);
             },
             onSwipe: (_, __, ___) => false,
-            padding: const EdgeInsets.all(24.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.05,
+              vertical: MediaQuery.of(context).size.height * 0.02,
+            ),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(8.0),
           child: _buildControls(),
         ),
       ],
@@ -352,7 +605,8 @@ class FlashcardScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Container(
-                    padding: const EdgeInsets.all(24.0),
+                    height: MediaQuery.of(context).size.height * 0.55,
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       gradient: LinearGradient(
@@ -388,15 +642,17 @@ class FlashcardScreen extends StatelessWidget {
                             if (flashcard.imageUrl != null && !flipState.flippedCards[flashcard.id]!)
                               Expanded(
                                 flex: 2,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(
-                                    flashcard.imageUrl!,
-                                    fit: BoxFit.cover,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      flashcard.imageUrl!,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                 ),
                               ),
-                            const SizedBox(height: 20),
                             Expanded(
                               flex: 3,
                               child: Center(
@@ -418,23 +674,23 @@ class FlashcardScreen extends StatelessWidget {
                               ),
                             ),
                             if (flashcard.example != null && !(flipState.flippedCards[flashcard.id] ?? false))
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20.0),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                margin: const EdgeInsets.only(top: 8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  flashcard.example!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontStyle: FontStyle.italic,
                                   ),
-                                  child: Text(
-                                    flashcard.example!,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                           ],
@@ -497,17 +753,79 @@ class FlashcardScreen extends StatelessWidget {
     int? currentIndex,
     CardSwiperDirection direction,
   ) {
-    print('${context.read<FlashcardBloc>().state.generated![previousIndex]}');
     if (currentIndex == null) return false;
+    
     final bloc = context.read<FlashcardBloc>();
-    final flashcard = bloc.state.generated![previousIndex];
-    if (direction == CardSwiperDirection.right) {
-      print('right');
-      bloc.add(FlashcardEvent.addFlashcard(flashcard: flashcard));
-    } else if (direction == CardSwiperDirection.left) {
-      print('left');
-      bloc.add(FlashcardEvent.putAsideFlashcard(flashcard: flashcard));
+    final state = bloc.state;
+    
+    // Get the combined list of cards
+    final allCards = state.generated ?? state.flashcards!;
+    
+    // Check if the index is valid
+    if (previousIndex >= allCards.length) return false;
+    
+    final flashcard = allCards[previousIndex];
+    
+    // Only allow swiping on regular flashcards, not generated ones
+    if (state.generated != null && state.generated!.contains(flashcard)) {
+      // For generated flashcards, show a confirmation dialog
+      if (direction == CardSwiperDirection.right) {
+        // Add the card and check if it's the last one
+        bloc.add(FlashcardEvent.addFlashcard(flashcard: flashcard));
+        // if (state.generated!.length == 1) {
+        //   // If this was the last card, return to main view
+        //   bloc.add(const FlashcardEvent.loadFlashcards());
+        // }
+      } else if (direction == CardSwiperDirection.left) {
+        // Put aside the card and check if it's the last one
+        bloc.add(FlashcardEvent.putAsideFlashcard(flashcard: flashcard));
+        // if (state.generated!.length == 1) {
+        //   // If this was the last card, return to main view
+        //   bloc.add(const FlashcardEvent.loadFlashcards());
+        // }
+      }
+    } else {
+      // Handle regular flashcards
+      if (direction == CardSwiperDirection.right) {
+        bloc.add(FlashcardEvent.addFlashcard(flashcard: flashcard));
+      } else if (direction == CardSwiperDirection.left) {
+        bloc.add(FlashcardEvent.putAsideFlashcard(flashcard: flashcard));
+      }
     }
+    
     return true;
+  }
+
+  Widget _buildActionButton(
+    BuildContext context,
+    IconData icon,
+    Color color,
+    VoidCallback onPressed,
+    String label,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            icon: Icon(icon, color: color),
+            onPressed: onPressed,
+            iconSize: 32,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            color: color,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
   }
 }

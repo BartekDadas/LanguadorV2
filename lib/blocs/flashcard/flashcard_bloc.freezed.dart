@@ -32,6 +32,7 @@ mixin _$FlashcardEvent {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +51,7 @@ mixin _$FlashcardEvent {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -68,6 +70,7 @@ mixin _$FlashcardEvent {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -83,6 +86,7 @@ mixin _$FlashcardEvent {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -97,6 +101,7 @@ mixin _$FlashcardEvent {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -111,6 +116,7 @@ mixin _$FlashcardEvent {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -175,8 +181,6 @@ class __$$LoadFlashcardsImplCopyWithImpl<$Res>
 class _$LoadFlashcardsImpl implements _LoadFlashcards {
   const _$LoadFlashcardsImpl({this.deckName});
 
-// required String language,
-// required String difficulty,
   @override
   final String? deckName;
 
@@ -223,6 +227,7 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return loadFlashcards(deckName);
   }
@@ -244,6 +249,7 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return loadFlashcards?.call(deckName);
   }
@@ -265,6 +271,7 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (loadFlashcards != null) {
@@ -286,6 +293,7 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return loadFlashcards(this);
   }
@@ -303,6 +311,7 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return loadFlashcards?.call(this);
   }
@@ -320,6 +329,7 @@ class _$LoadFlashcardsImpl implements _LoadFlashcards {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (loadFlashcards != null) {
@@ -333,8 +343,6 @@ abstract class _LoadFlashcards implements FlashcardEvent {
   const factory _LoadFlashcards({final String? deckName}) =
       _$LoadFlashcardsImpl;
 
-// required String language,
-// required String difficulty,
   String? get deckName;
 
   /// Create a copy of FlashcardEvent
@@ -446,6 +454,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return generateNewFlashcards(topic, language, difficulty);
   }
@@ -467,6 +476,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return generateNewFlashcards?.call(topic, language, difficulty);
   }
@@ -488,6 +498,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (generateNewFlashcards != null) {
@@ -509,6 +520,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return generateNewFlashcards(this);
   }
@@ -526,6 +538,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return generateNewFlashcards?.call(this);
   }
@@ -543,6 +556,7 @@ class _$GenerateFlashcardsImpl implements _GenerateFlashcards {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (generateNewFlashcards != null) {
@@ -652,6 +666,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return markAsLearned(flashcardId);
   }
@@ -673,6 +688,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return markAsLearned?.call(flashcardId);
   }
@@ -694,6 +710,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (markAsLearned != null) {
@@ -715,6 +732,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return markAsLearned(this);
   }
@@ -732,6 +750,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return markAsLearned?.call(this);
   }
@@ -749,6 +768,7 @@ class _$MarkAsLearnedImpl implements _MarkAsLearned {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (markAsLearned != null) {
@@ -854,6 +874,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return reviewLater(flashcardId);
   }
@@ -875,6 +896,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return reviewLater?.call(flashcardId);
   }
@@ -896,6 +918,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (reviewLater != null) {
@@ -917,6 +940,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return reviewLater(this);
   }
@@ -934,6 +958,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return reviewLater?.call(this);
   }
@@ -951,6 +976,7 @@ class _$ReviewLaterImpl implements _ReviewLater {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (reviewLater != null) {
@@ -1068,6 +1094,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return addFlashcard(flashcard);
   }
@@ -1089,6 +1116,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return addFlashcard?.call(flashcard);
   }
@@ -1110,6 +1138,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (addFlashcard != null) {
@@ -1131,6 +1160,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return addFlashcard(this);
   }
@@ -1148,6 +1178,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return addFlashcard?.call(this);
   }
@@ -1165,6 +1196,7 @@ class _$AddFlashcardImpl implements _AddFlashcard {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (addFlashcard != null) {
@@ -1283,6 +1315,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return putAsideFlashcard(flashcard);
   }
@@ -1304,6 +1337,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return putAsideFlashcard?.call(flashcard);
   }
@@ -1325,6 +1359,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (putAsideFlashcard != null) {
@@ -1346,6 +1381,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return putAsideFlashcard(this);
   }
@@ -1363,6 +1399,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return putAsideFlashcard?.call(this);
   }
@@ -1380,6 +1417,7 @@ class _$PutAsideFlashcardImpl implements _PutAsideFlashcard {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (putAsideFlashcard != null) {
@@ -1457,6 +1495,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return deleteFlashcards();
   }
@@ -1478,6 +1517,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return deleteFlashcards?.call();
   }
@@ -1499,6 +1539,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (deleteFlashcards != null) {
@@ -1520,6 +1561,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return deleteFlashcards(this);
   }
@@ -1537,6 +1579,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return deleteFlashcards?.call(this);
   }
@@ -1554,6 +1597,7 @@ class _$DeleteFlashcardImpl implements _DeleteFlashcard {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (deleteFlashcards != null) {
@@ -1650,6 +1694,7 @@ class _$ChangeDeckImpl implements _ChangeDeck {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return changeDeck(deckName);
   }
@@ -1671,6 +1716,7 @@ class _$ChangeDeckImpl implements _ChangeDeck {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return changeDeck?.call(deckName);
   }
@@ -1692,6 +1738,7 @@ class _$ChangeDeckImpl implements _ChangeDeck {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (changeDeck != null) {
@@ -1713,6 +1760,7 @@ class _$ChangeDeckImpl implements _ChangeDeck {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return changeDeck(this);
   }
@@ -1730,6 +1778,7 @@ class _$ChangeDeckImpl implements _ChangeDeck {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return changeDeck?.call(this);
   }
@@ -1747,6 +1796,7 @@ class _$ChangeDeckImpl implements _ChangeDeck {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (changeDeck != null) {
@@ -1863,6 +1913,7 @@ class _$LoadDeckFlashcardsImpl implements _LoadDeckFlashcards {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return loadDeckFlashcards(deckName, deckService);
   }
@@ -1884,6 +1935,7 @@ class _$LoadDeckFlashcardsImpl implements _LoadDeckFlashcards {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return loadDeckFlashcards?.call(deckName, deckService);
   }
@@ -1905,6 +1957,7 @@ class _$LoadDeckFlashcardsImpl implements _LoadDeckFlashcards {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (loadDeckFlashcards != null) {
@@ -1926,6 +1979,7 @@ class _$LoadDeckFlashcardsImpl implements _LoadDeckFlashcards {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return loadDeckFlashcards(this);
   }
@@ -1943,6 +1997,7 @@ class _$LoadDeckFlashcardsImpl implements _LoadDeckFlashcards {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return loadDeckFlashcards?.call(this);
   }
@@ -1960,6 +2015,7 @@ class _$LoadDeckFlashcardsImpl implements _LoadDeckFlashcards {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (loadDeckFlashcards != null) {
@@ -2096,6 +2152,7 @@ class _$SaveToDeckImpl implements _SaveToDeck {
     required TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)
         saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
   }) {
     return saveToDeck(deckName, deckService, flashcards);
   }
@@ -2117,6 +2174,7 @@ class _$SaveToDeckImpl implements _SaveToDeck {
     TResult? Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
   }) {
     return saveToDeck?.call(deckName, deckService, flashcards);
   }
@@ -2138,6 +2196,7 @@ class _$SaveToDeckImpl implements _SaveToDeck {
     TResult Function(String deckName, DeckService deckService,
             List<Flashcard> flashcards)?
         saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (saveToDeck != null) {
@@ -2159,6 +2218,7 @@ class _$SaveToDeckImpl implements _SaveToDeck {
     required TResult Function(_ChangeDeck value) changeDeck,
     required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
     required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
   }) {
     return saveToDeck(this);
   }
@@ -2176,6 +2236,7 @@ class _$SaveToDeckImpl implements _SaveToDeck {
     TResult? Function(_ChangeDeck value)? changeDeck,
     TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
   }) {
     return saveToDeck?.call(this);
   }
@@ -2193,6 +2254,7 @@ class _$SaveToDeckImpl implements _SaveToDeck {
     TResult Function(_ChangeDeck value)? changeDeck,
     TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
     TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
     required TResult orElse(),
   }) {
     if (saveToDeck != null) {
@@ -2220,6 +2282,214 @@ abstract class _SaveToDeck implements FlashcardEvent {
 }
 
 /// @nodoc
+abstract class _$$UpdateCurrentIndexImplCopyWith<$Res> {
+  factory _$$UpdateCurrentIndexImplCopyWith(_$UpdateCurrentIndexImpl value,
+          $Res Function(_$UpdateCurrentIndexImpl) then) =
+      __$$UpdateCurrentIndexImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({int index});
+}
+
+/// @nodoc
+class __$$UpdateCurrentIndexImplCopyWithImpl<$Res>
+    extends _$FlashcardEventCopyWithImpl<$Res, _$UpdateCurrentIndexImpl>
+    implements _$$UpdateCurrentIndexImplCopyWith<$Res> {
+  __$$UpdateCurrentIndexImplCopyWithImpl(_$UpdateCurrentIndexImpl _value,
+      $Res Function(_$UpdateCurrentIndexImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? index = null,
+  }) {
+    return _then(_$UpdateCurrentIndexImpl(
+      index: null == index
+          ? _value.index
+          : index // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateCurrentIndexImpl implements _UpdateCurrentIndex {
+  const _$UpdateCurrentIndexImpl({required this.index});
+
+  @override
+  final int index;
+
+  @override
+  String toString() {
+    return 'FlashcardEvent.updateCurrentIndex(index: $index)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateCurrentIndexImpl &&
+            (identical(other.index, index) || other.index == index));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, index);
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateCurrentIndexImplCopyWith<_$UpdateCurrentIndexImpl> get copyWith =>
+      __$$UpdateCurrentIndexImplCopyWithImpl<_$UpdateCurrentIndexImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? deckName) loadFlashcards,
+    required TResult Function(String topic, String language, String difficulty)
+        generateNewFlashcards,
+    required TResult Function(String flashcardId) markAsLearned,
+    required TResult Function(String flashcardId) reviewLater,
+    required TResult Function(Flashcard flashcard) addFlashcard,
+    required TResult Function(Flashcard flashcard) putAsideFlashcard,
+    required TResult Function() deleteFlashcards,
+    required TResult Function(String deckName) changeDeck,
+    required TResult Function(String deckName, DeckService deckService)
+        loadDeckFlashcards,
+    required TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)
+        saveToDeck,
+    required TResult Function(int index) updateCurrentIndex,
+  }) {
+    return updateCurrentIndex(index);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? deckName)? loadFlashcards,
+    TResult? Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult? Function(String flashcardId)? markAsLearned,
+    TResult? Function(String flashcardId)? reviewLater,
+    TResult? Function(Flashcard flashcard)? addFlashcard,
+    TResult? Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult? Function()? deleteFlashcards,
+    TResult? Function(String deckName)? changeDeck,
+    TResult? Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult? Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+    TResult? Function(int index)? updateCurrentIndex,
+  }) {
+    return updateCurrentIndex?.call(index);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? deckName)? loadFlashcards,
+    TResult Function(String topic, String language, String difficulty)?
+        generateNewFlashcards,
+    TResult Function(String flashcardId)? markAsLearned,
+    TResult Function(String flashcardId)? reviewLater,
+    TResult Function(Flashcard flashcard)? addFlashcard,
+    TResult Function(Flashcard flashcard)? putAsideFlashcard,
+    TResult Function()? deleteFlashcards,
+    TResult Function(String deckName)? changeDeck,
+    TResult Function(String deckName, DeckService deckService)?
+        loadDeckFlashcards,
+    TResult Function(String deckName, DeckService deckService,
+            List<Flashcard> flashcards)?
+        saveToDeck,
+    TResult Function(int index)? updateCurrentIndex,
+    required TResult orElse(),
+  }) {
+    if (updateCurrentIndex != null) {
+      return updateCurrentIndex(index);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_LoadFlashcards value) loadFlashcards,
+    required TResult Function(_GenerateFlashcards value) generateNewFlashcards,
+    required TResult Function(_MarkAsLearned value) markAsLearned,
+    required TResult Function(_ReviewLater value) reviewLater,
+    required TResult Function(_AddFlashcard value) addFlashcard,
+    required TResult Function(_PutAsideFlashcard value) putAsideFlashcard,
+    required TResult Function(_DeleteFlashcard value) deleteFlashcards,
+    required TResult Function(_ChangeDeck value) changeDeck,
+    required TResult Function(_LoadDeckFlashcards value) loadDeckFlashcards,
+    required TResult Function(_SaveToDeck value) saveToDeck,
+    required TResult Function(_UpdateCurrentIndex value) updateCurrentIndex,
+  }) {
+    return updateCurrentIndex(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_LoadFlashcards value)? loadFlashcards,
+    TResult? Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult? Function(_MarkAsLearned value)? markAsLearned,
+    TResult? Function(_ReviewLater value)? reviewLater,
+    TResult? Function(_AddFlashcard value)? addFlashcard,
+    TResult? Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult? Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult? Function(_ChangeDeck value)? changeDeck,
+    TResult? Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult? Function(_SaveToDeck value)? saveToDeck,
+    TResult? Function(_UpdateCurrentIndex value)? updateCurrentIndex,
+  }) {
+    return updateCurrentIndex?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_LoadFlashcards value)? loadFlashcards,
+    TResult Function(_GenerateFlashcards value)? generateNewFlashcards,
+    TResult Function(_MarkAsLearned value)? markAsLearned,
+    TResult Function(_ReviewLater value)? reviewLater,
+    TResult Function(_AddFlashcard value)? addFlashcard,
+    TResult Function(_PutAsideFlashcard value)? putAsideFlashcard,
+    TResult Function(_DeleteFlashcard value)? deleteFlashcards,
+    TResult Function(_ChangeDeck value)? changeDeck,
+    TResult Function(_LoadDeckFlashcards value)? loadDeckFlashcards,
+    TResult Function(_SaveToDeck value)? saveToDeck,
+    TResult Function(_UpdateCurrentIndex value)? updateCurrentIndex,
+    required TResult orElse(),
+  }) {
+    if (updateCurrentIndex != null) {
+      return updateCurrentIndex(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateCurrentIndex implements FlashcardEvent {
+  const factory _UpdateCurrentIndex({required final int index}) =
+      _$UpdateCurrentIndexImpl;
+
+  int get index;
+
+  /// Create a copy of FlashcardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateCurrentIndexImplCopyWith<_$UpdateCurrentIndexImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$FlashcardState {
   bool get isLoading => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
@@ -2230,6 +2500,7 @@ mixin _$FlashcardState {
   List<Flashcard>? get learned => throw _privateConstructorUsedError;
   List<Flashcard>? get putAside => throw _privateConstructorUsedError;
   String get deckName => throw _privateConstructorUsedError;
+  int get currentIndex => throw _privateConstructorUsedError;
 
   /// Create a copy of FlashcardState
   /// with the given fields replaced by the non-null parameter values.
@@ -2253,7 +2524,8 @@ abstract class $FlashcardStateCopyWith<$Res> {
       List<Flashcard>? flashcards,
       List<Flashcard>? learned,
       List<Flashcard>? putAside,
-      String deckName});
+      String deckName,
+      int currentIndex});
 }
 
 /// @nodoc
@@ -2280,6 +2552,7 @@ class _$FlashcardStateCopyWithImpl<$Res, $Val extends FlashcardState>
     Object? learned = freezed,
     Object? putAside = freezed,
     Object? deckName = null,
+    Object? currentIndex = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -2318,6 +2591,10 @@ class _$FlashcardStateCopyWithImpl<$Res, $Val extends FlashcardState>
           ? _value.deckName
           : deckName // ignore: cast_nullable_to_non_nullable
               as String,
+      currentIndex: null == currentIndex
+          ? _value.currentIndex
+          : currentIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -2339,7 +2616,8 @@ abstract class _$$FlashcardStateImplCopyWith<$Res>
       List<Flashcard>? flashcards,
       List<Flashcard>? learned,
       List<Flashcard>? putAside,
-      String deckName});
+      String deckName,
+      int currentIndex});
 }
 
 /// @nodoc
@@ -2364,6 +2642,7 @@ class __$$FlashcardStateImplCopyWithImpl<$Res>
     Object? learned = freezed,
     Object? putAside = freezed,
     Object? deckName = null,
+    Object? currentIndex = null,
   }) {
     return _then(_$FlashcardStateImpl(
       isLoading: null == isLoading
@@ -2402,6 +2681,10 @@ class __$$FlashcardStateImplCopyWithImpl<$Res>
           ? _value.deckName
           : deckName // ignore: cast_nullable_to_non_nullable
               as String,
+      currentIndex: null == currentIndex
+          ? _value.currentIndex
+          : currentIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -2418,7 +2701,8 @@ class _$FlashcardStateImpl implements _FlashcardState {
       final List<Flashcard>? flashcards,
       final List<Flashcard>? learned,
       final List<Flashcard>? putAside,
-      this.deckName = 'all'})
+      this.deckName = 'all',
+      this.currentIndex = 0})
       : _generated = generated,
         _flashcards = flashcards,
         _learned = learned,
@@ -2478,10 +2762,13 @@ class _$FlashcardStateImpl implements _FlashcardState {
   @override
   @JsonKey()
   final String deckName;
+  @override
+  @JsonKey()
+  final int currentIndex;
 
   @override
   String toString() {
-    return 'FlashcardState(isLoading: $isLoading, error: $error, language: $language, difficulty: $difficulty, generated: $generated, flashcards: $flashcards, learned: $learned, putAside: $putAside, deckName: $deckName)';
+    return 'FlashcardState(isLoading: $isLoading, error: $error, language: $language, difficulty: $difficulty, generated: $generated, flashcards: $flashcards, learned: $learned, putAside: $putAside, deckName: $deckName, currentIndex: $currentIndex)';
   }
 
   @override
@@ -2503,7 +2790,9 @@ class _$FlashcardStateImpl implements _FlashcardState {
             const DeepCollectionEquality().equals(other._learned, _learned) &&
             const DeepCollectionEquality().equals(other._putAside, _putAside) &&
             (identical(other.deckName, deckName) ||
-                other.deckName == deckName));
+                other.deckName == deckName) &&
+            (identical(other.currentIndex, currentIndex) ||
+                other.currentIndex == currentIndex));
   }
 
   @override
@@ -2517,7 +2806,8 @@ class _$FlashcardStateImpl implements _FlashcardState {
       const DeepCollectionEquality().hash(_flashcards),
       const DeepCollectionEquality().hash(_learned),
       const DeepCollectionEquality().hash(_putAside),
-      deckName);
+      deckName,
+      currentIndex);
 
   /// Create a copy of FlashcardState
   /// with the given fields replaced by the non-null parameter values.
@@ -2539,7 +2829,8 @@ abstract class _FlashcardState implements FlashcardState {
       final List<Flashcard>? flashcards,
       final List<Flashcard>? learned,
       final List<Flashcard>? putAside,
-      final String deckName}) = _$FlashcardStateImpl;
+      final String deckName,
+      final int currentIndex}) = _$FlashcardStateImpl;
 
   @override
   bool get isLoading;
@@ -2559,6 +2850,8 @@ abstract class _FlashcardState implements FlashcardState {
   List<Flashcard>? get putAside;
   @override
   String get deckName;
+  @override
+  int get currentIndex;
 
   /// Create a copy of FlashcardState
   /// with the given fields replaced by the non-null parameter values.

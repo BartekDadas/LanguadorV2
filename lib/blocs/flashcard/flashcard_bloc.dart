@@ -39,7 +39,8 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
         generateNewFlashcards: (e) => _onGenerateNewFlashcards(e, emit),
         loadDeckFlashcards: (e) => _onLoadDeckFlashcards(e, emit),
         saveToDeck: (e) => _onSaveToDeck(e, emit),
-        changeDeck: (e) => _onChangeDeck(e, emit)
+        changeDeck: (e) => _onChangeDeck(e, emit),
+        updateCurrentIndex: (e) => _onUpdateCurrentIndex(e, emit),
       );
     });
   }
@@ -70,50 +71,41 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
     Emitter<FlashcardState> emit,
   ) async {
     try {
-      emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(isLoading: true, error: null));
       
       await _ensureUserModelInitialized();
       if (userModel == null) {
         emit(state.copyWith(
           isLoading: false,
-          error: 'User model not initialized',
+          error: 'Failed to initialize user settings. Please try again.',
         ));
         return;
       }
 
       final deckName = event.deckName ?? state.deckName;
       
-      // Try to load from local storage first
-      final localFlashcards = await _storageService.getFlashcards(deckName);
-      final localLearned = await _storageService.getLearnedFlashcards(deckName);
-
       try {
-        // final flashcards = await FlashcardsProvider.getFlashcards();
-        // await _storageService.saveFlashcards(flashcards);
+        final localFlashcards = await _storageService.getFlashcards(deckName);
         emit(state.copyWith(
           error: null,
           language: userModel!.learningLanguages[0].code,
           difficulty: userModel!.level == 1 ? 'beginner' : 'intermediate',
           isLoading: false,
-          // flashcards: flashcards,
-          learned: [],
+          flashcards: localFlashcards,
+          // learned: [],
           deckName: deckName,
         ));
-      } catch (error) {
+      } catch (e) {
+        print("Error: $e");
         emit(state.copyWith(
-          error: 'Failed to fetch flashcards. Using offline data.',
           isLoading: false,
-          flashcards: localFlashcards,
-          learned: localLearned,
-          language: userModel!.learningLanguages[0].code,
-          difficulty: userModel!.level == 1 ? 'beginner' : 'intermediate',
-          deckName: deckName,
+          error: 'Failed to load flashcards. Please check your connection and try again.',
         ));
       }
-    } catch (error) {
+    } catch (e) {
       emit(state.copyWith(
         isLoading: false,
-        error: error.toString(),
+        error: 'An unexpected error occurred. Please try again.',
       ));
     }
   }
@@ -130,27 +122,22 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
         difficulty: event.difficulty,
       );
 
-      final deckName = state.deckName;
-      print(flashcards);
       if (flashcards.isNotEmpty) {
-        // await _storageService.saveFlashcards(flashcards, deckName);
         emit(state.copyWith(
           isLoading: false,
           generated: flashcards,
+          error: null,
+        ));
+      } else {
+        emit(state.copyWith(
+          isLoading: false,
+          error: 'No flashcards were generated. Please try again with a different topic.',
         ));
       }
-        // Load from local storage if API fails
-      //final localFlashcards = await _storageService.getFlashcards(deckName);
-      // emit(state.copyWith(
-      //   error: localFlashcards.isEmpty ? 'No connection to database' : 'Using offline data',
-      //   isLoading: false,
-      //   flashcards: localFlashcards,
-      //   learned: state.learned,
-      // ));
     } catch (error) {
       emit(state.copyWith(
         isLoading: false,
-        error: error.toString(),
+        error: 'Failed to generate flashcards. Please try again.',
       ));
     }
   }
@@ -208,27 +195,42 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
     _AddFlashcard event,
     Emitter<FlashcardState> emit,
   ) async {
-    // final response = await FlashCardsProvider().addFlashCardToBase(event.flashcard);
-    print('add flashcard event called');
-    if (state.generated != null) { //& response
-      final updatedFlashcards = List<Flashcard>.from(state.flashcards!)
-        ..add(event.flashcard);
-
-      final updatedGenerated = List<Flashcard>.from(state.generated!)
-        ..remove(event.flashcard);
-
-      final deckName = state.deckName;
-
-      // await _storageService.saveFlashcards(updatedFlashcards, deckName);
-      // await _storageService.saveLearnedFlashcards(
-      //   List.from(state.learned ?? [])..add(event.flashcard),
-      //   deckName,
-      // );
-      print(updatedFlashcards.length);
+    try {
+      final flashcard = event.flashcard;
+      final currentFlashcards = List<Flashcard>.from(state.flashcards ?? []);
+      
+      // Add the flashcard to the current deck
+      currentFlashcards.add(flashcard);
+      
+      // Remove from generated if it was a generated flashcard
+      List<Flashcard>? currentGenerated;
+      if (state.generated != null) {
+        currentGenerated = List<Flashcard>.from(state.generated!);
+        currentGenerated.remove(flashcard);
+      }
+      
+      // Save to storage
+      await _storageService.saveFlashcards(currentFlashcards, state.deckName);
+      
+      // If this was the last generated card, clear the generated state and reload flashcards
+      if (currentGenerated?.isEmpty ?? false) {
+        emit(state.copyWith(
+          flashcards: currentFlashcards,
+          generated: null,
+          currentIndex: 0,
+        ));
+        
+        // Reload flashcards to show the updated deck
+        add(const FlashcardEvent.loadFlashcards());
+      } else {
+        emit(state.copyWith(
+          flashcards: currentFlashcards,
+          generated: currentGenerated,
+        ));
+      }
+    } catch (e) {
       emit(state.copyWith(
-        generated: updatedGenerated.isEmpty? null : updatedGenerated,
-        flashcards: updatedFlashcards,
-        learned: List.from(state.learned ?? [])..add(event.flashcard),
+        error: 'Failed to add flashcard to deck. Please try again.',
       ));
     }
   }
@@ -237,21 +239,45 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
     _PutAsideFlashcard event,
     Emitter<FlashcardState> emit,
   ) async {
-    print('put aside event called');
-    if (state.generated != null) {
-      final updatedFlashcards = List<Flashcard>.from(state.generated!)
-        ..remove(event.flashcard);
+    try {
+      final flashcard = event.flashcard;
       
-      final updatedPutAside = List<Flashcard>.from(state.putAside ?? [])..add(event.flashcard);
-
-      final deckName = state.deckName;
-
-      // await _storageService.saveFlashcards(updatedFlashcards, deckName);
-      // await _storageService.saveLearnedFlashcards(updatedLearned, deckName);
-      print(updatedFlashcards.length);
+      // If it's a generated flashcard, just remove it from generated
+      if (state.generated?.contains(flashcard) ?? false) {
+        final currentGenerated = List<Flashcard>.from(state.generated!);
+        currentGenerated.remove(flashcard);
+        
+        // If this was the last generated card, clear the generated state and reload flashcards
+        if (currentGenerated.isEmpty) {
+          emit(state.copyWith(
+            generated: null,
+            currentIndex: 0,
+          ));
+          
+          // Reload flashcards to show the main deck view
+          add(const FlashcardEvent.loadFlashcards());
+        } else {
+          emit(state.copyWith(generated: currentGenerated));
+        }
+        return;
+      }
+      
+      // Otherwise handle as regular flashcard
+      final currentFlashcards = List<Flashcard>.from(state.flashcards ?? []);
+      final currentPutAside = List<Flashcard>.from(state.putAside ?? []);
+      
+      currentFlashcards.remove(flashcard);
+      currentPutAside.add(flashcard);
+      
+      await _storageService.saveFlashcards(currentFlashcards, state.deckName);
+      
       emit(state.copyWith(
-        generated: updatedFlashcards.isEmpty? null : updatedFlashcards,
-        putAside: updatedPutAside,
+        flashcards: currentFlashcards,
+        putAside: currentPutAside,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        error: 'Failed to put flashcard aside. Please try again.',
       ));
     }
   }
@@ -277,6 +303,7 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
         flashcards: flashcards,
       ));
     } catch (error) {
+      print("(LoadDeckFlashcards) Error: $error");
       emit(state.copyWith(
         isLoading: false,
         error: 'Failed to load deck flashcards: ${error.toString()}',
@@ -313,6 +340,7 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
     emit(state.copyWith(isLoading: true));
 
     final deckName = event.deckName;
+    print('deckName: $deckName');
 
     final flashcards =  await _storageService.getFlashcards(deckName);
 
@@ -323,6 +351,13 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
       learned: [],
     ));
 
+  }
+
+  Future<void> _onUpdateCurrentIndex(
+    _UpdateCurrentIndex event,
+    Emitter<FlashcardState> emit,
+  ) async {
+    emit(state.copyWith(currentIndex: event.index));
   }
 
   @override

@@ -3,8 +3,6 @@ part of 'flashcard_bloc.dart';
 @freezed
 class FlashcardEvent with _$FlashcardEvent {
   const factory FlashcardEvent.loadFlashcards({
-    // required String language,
-    // required String difficulty,
     String? deckName,
   }) = _LoadFlashcards;
 
@@ -46,4 +44,8 @@ class FlashcardEvent with _$FlashcardEvent {
     required DeckService deckService,
     required List<Flashcard> flashcards,
   }) = _SaveToDeck;
+
+  const factory FlashcardEvent.updateCurrentIndex({
+    required int index,
+  }) = _UpdateCurrentIndex;
 }

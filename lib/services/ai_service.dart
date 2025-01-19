@@ -34,7 +34,6 @@ class AIService {
           'difficulty': difficulty,
         }),
       );
-
       print(response.body);
       if (response.statusCode == 200) {
         // print(response.body);

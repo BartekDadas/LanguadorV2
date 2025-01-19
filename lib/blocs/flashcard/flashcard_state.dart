@@ -12,5 +12,6 @@ class FlashcardState with _$FlashcardState {
     List<Flashcard>? learned,
     List<Flashcard>? putAside,
     @Default('all') String deckName,
+    @Default(0) int currentIndex,
   }) = _FlashcardState;
 }
