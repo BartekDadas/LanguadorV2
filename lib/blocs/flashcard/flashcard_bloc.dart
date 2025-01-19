@@ -357,7 +357,7 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
       deckName: deckName,
       flashcards: flashcards,
       learned: [],
-      currentIndex: state.currentIndex.clamp(0, flashcards.length - 1)
+      currentIndex: flashcards.isEmpty ? 0 : state.currentIndex.clamp(0, flashcards.length - 1)
     ));
 
   }

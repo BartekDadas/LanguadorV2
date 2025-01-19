@@ -1,4 +1,6 @@
 // import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
@@ -278,26 +280,6 @@ class FlashcardScreen extends StatelessWidget {
               );
             }
 
-            if (state.flashcards?.isEmpty ?? true) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('No flashcards available'),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<FlashcardBloc>().add(
-                          const FlashcardEvent.loadFlashcards(),
-                        );
-                      },
-                      child: const Text('Refresh'),
-                    ),
-                  ],
-                ),
-              );
-            }
-
             // Combine both generated and regular flashcards
             final allCards = [...?state.flashcards];
 
@@ -547,20 +529,43 @@ class FlashcardScreen extends StatelessWidget {
 
     return Column(
       children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.6,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.list_rounded),
+              onPressed: () async {
+                  final index = await _showAllFlashcardsDialog(context, flashcards);
+                  if(index != null) {
+                    context.read<FlashcardBloc>().cardController.moveTo(index);
+                  }
+              },
+              tooltip: 'Show all flashcards',
+            ),
+          ],
+        ),
+        Expanded(
           child: CardSwiper(
-            // Always show 2 cards if there are at least 2 cards available
-            numberOfCardsDisplayed: flashcards.length >= 2 ? 2 : 1,
+            numberOfCardsDisplayed: 1,
             cardsCount: flashcards.length,
+            allowedSwipeDirection: const AllowedSwipeDirection.symmetric(horizontal: true),
+            isLoop: true,
             controller: context.read<FlashcardBloc>().cardController,
+            scale: 0.95,
+            duration: const Duration(milliseconds: 300),
             cardBuilder: (context, index, horizontalOffsetPercentage, verticalOffsetPercentage) {
               if (index >= flashcards.length) {
                 return const SizedBox.shrink();
               }
-              return _buildCard(flashcards[index], context);
+              
+              // Add horizontal slide effect
+              final slide = horizontalOffsetPercentage * 2;
+              
+              return Transform.translate(
+                offset: Offset(slide.toDouble(), 0),
+                child: _buildCard(flashcards[index], context),
+              );
             },
-            onSwipe: (_, __, ___) => false,
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.05,
               vertical: MediaQuery.of(context).size.height * 0.02,
@@ -814,6 +819,69 @@ class FlashcardScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Future<int?> _showAllFlashcardsDialog(BuildContext context, List<Flashcard> flashcards) {
+    return showDialog<int?>(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'All Flashcards',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const Divider(),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: flashcards.length,
+                  itemBuilder: (context, index) {
+                    final flashcard = flashcards[index];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: Text('${index + 1}'),
+                        ),
+                        title: Text(
+                          flashcard.front,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        subtitle: Text(flashcard.back),
+                        onTap: () {
+                          Navigator.pop(context, index);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
