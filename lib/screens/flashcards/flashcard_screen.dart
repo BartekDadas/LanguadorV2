@@ -155,9 +155,9 @@ class FlashcardScreen extends StatelessWidget {
             // Show generated flashcards in a separate view
             if (state.generated != null && state.generated!.isNotEmpty) {
               final cards = state.generated!;
-              print(cards.length);
+              print('Generated cards length: ${cards.length}, Current index: ${state.currentIndex}');
+              
               if (cards.isEmpty) {
-                // Return to the main flashcards view when no generated cards are left
                 context.read<FlashcardBloc>().add(
                   const FlashcardEvent.loadFlashcards(),
                 );
@@ -169,17 +169,15 @@ class FlashcardScreen extends StatelessWidget {
                     child: Stack(
                       children: [
                         if (cards.isNotEmpty) CardSwiper(
-                          numberOfCardsDisplayed: () {
-                            final result = cards.length > 1 ? 2 : 1;
-                            print("${cards.length} > 1 ? 2 : 1 = $result");
-                            return result;
-                          }(),
+                          // Always show 2 cards if there are at least 2 cards available
+                          numberOfCardsDisplayed: cards.length >= 2 ? 2 : 1,
                           cardsCount: cards.length,
                           controller: context.read<FlashcardBloc>().cardController,
                           cardBuilder: (context, index, horizontalOffsetPercentage, verticalOffsetPercentage) {
                             if (index >= cards.length) {
                               return const SizedBox.shrink();
                             }
+                            // Ensure we're using the correct index based on the current state;
                             return _buildCard(cards[index], context);
                           },
                           allowedSwipeDirection: const AllowedSwipeDirection.symmetric(horizontal: true),
@@ -222,18 +220,18 @@ class FlashcardScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: IconButton(
-                            icon: const Icon(Icons.close, color: Colors.grey),
-                            onPressed: () {
-                              context.read<FlashcardBloc>().add(
-                                const FlashcardEvent.loadFlashcards(),
-                              );
-                            },
-                          ),
-                        ),
+                        // Positioned(
+                        //   top: 8,
+                        //   right: 8,
+                        //   child: IconButton(
+                        //     icon: const Icon(Icons.close, color: Colors.grey),
+                        //     onPressed: () {
+                        //       context.read<FlashcardBloc>().add(
+                        //         const FlashcardEvent.loadFlashcards(),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -301,7 +299,7 @@ class FlashcardScreen extends StatelessWidget {
             }
 
             // Combine both generated and regular flashcards
-            final allCards = state.flashcards ?? [];
+            final allCards = [...?state.flashcards];
 
             if (allCards.isNotEmpty) {
               if (allCards.isEmpty) {
@@ -540,24 +538,20 @@ class FlashcardScreen extends StatelessWidget {
   }
 
   Widget _buildFlashcards(List<Flashcard> flashcards, BuildContext context) {
-    if (flashcards.isEmpty) {
-      context.read<FlashcardBloc>().add(
-        const FlashcardEvent.loadFlashcards(),
-      );
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (flashcards.isEmpty) {
+    //   context.read<FlashcardBloc>().add(
+    //     const FlashcardEvent.loadFlashcards(),
+    //   );
+    //   return const Center(child: CircularProgressIndicator());
+    // }
 
     return Column(
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.6,
           child: CardSwiper(
-            numberOfCardsDisplayed: 1,
-            onEnd: () {
-              context.read<FlashcardBloc>().add(
-                const FlashcardEvent.loadFlashcards(),
-              );
-            },
+            // Always show 2 cards if there are at least 2 cards available
+            numberOfCardsDisplayed: flashcards.length >= 2 ? 2 : 1,
             cardsCount: flashcards.length,
             controller: context.read<FlashcardBloc>().cardController,
             cardBuilder: (context, index, horizontalOffsetPercentage, verticalOffsetPercentage) {
@@ -758,31 +752,25 @@ class FlashcardScreen extends StatelessWidget {
     final bloc = context.read<FlashcardBloc>();
     final state = bloc.state;
     
-    // Get the combined list of cards
-    final allCards = state.generated ?? state.flashcards!;
+    // Get the current cards list
+    final cards = state.generated ?? state.flashcards!;
     
     // Check if the index is valid
-    if (previousIndex >= allCards.length) return false;
+    // if (previousIndex >= cards.length) return false;
     
-    final flashcard = allCards[previousIndex];
+    final flashcard = cards[previousIndex];
     
-    // Only allow swiping on regular flashcards, not generated ones
+    // Update current index before processing the swipe
+    bloc.add(FlashcardEvent.updateCurrentIndex(
+      index: currentIndex,
+    ));
+
+    // Handle generated flashcards
     if (state.generated != null && state.generated!.contains(flashcard)) {
-      // For generated flashcards, show a confirmation dialog
       if (direction == CardSwiperDirection.right) {
-        // Add the card and check if it's the last one
         bloc.add(FlashcardEvent.addFlashcard(flashcard: flashcard));
-        // if (state.generated!.length == 1) {
-        //   // If this was the last card, return to main view
-        //   bloc.add(const FlashcardEvent.loadFlashcards());
-        // }
       } else if (direction == CardSwiperDirection.left) {
-        // Put aside the card and check if it's the last one
         bloc.add(FlashcardEvent.putAsideFlashcard(flashcard: flashcard));
-        // if (state.generated!.length == 1) {
-        //   // If this was the last card, return to main view
-        //   bloc.add(const FlashcardEvent.loadFlashcards());
-        // }
       }
     } else {
       // Handle regular flashcards

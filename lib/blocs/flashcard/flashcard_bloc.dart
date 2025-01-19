@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart';
 import 'package:languador/models/user_model.dart';
 import 'package:languador/providers/flashcards_provider.dart';
 import 'package:languador/services/local_storage_service.dart';
@@ -72,7 +73,7 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
   ) async {
     try {
       emit(state.copyWith(isLoading: true, error: null));
-      
+
       await _ensureUserModelInitialized();
       if (userModel == null) {
         emit(state.copyWith(
@@ -94,6 +95,7 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
           flashcards: localFlashcards,
           // learned: [],
           deckName: deckName,
+          // currentIndex: state.currentIndex.clamp(0, localFlashcards.length - 1)
         ));
       } catch (e) {
         print("Error: $e");
@@ -187,6 +189,7 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
       emit(state.copyWith(
         flashcards: updatedFlashcards,
         learned: List.from(state.learned ?? [])..add(reviewedFlashcard),
+        currentIndex: state.currentIndex.clamp(0, updatedFlashcards.length - 1)
       ));
     }
   }
@@ -197,35 +200,41 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
   ) async {
     try {
       final flashcard = event.flashcard;
-      final currentFlashcards = List<Flashcard>.from(state.flashcards ?? []);
       
-      // Add the flashcard to the current deck
-      currentFlashcards.add(flashcard);
-      
-      // Remove from generated if it was a generated flashcard
-      List<Flashcard>? currentGenerated;
-      if (state.generated != null) {
-        currentGenerated = List<Flashcard>.from(state.generated!);
-        currentGenerated.remove(flashcard);
+      // Modify lists in place when possible
+      final List<Flashcard> currentFlashcards = List.from(state.flashcards ?? []);
+      if (!currentFlashcards.contains(flashcard)) {
+        currentFlashcards.add(flashcard);
       }
-      
-      // Save to storage
-      await _storageService.saveFlashcards(currentFlashcards, state.deckName);
-      
-      // If this was the last generated card, clear the generated state and reload flashcards
-      if (currentGenerated?.isEmpty ?? false) {
-        emit(state.copyWith(
-          flashcards: currentFlashcards,
-          generated: null,
-          currentIndex: 0,
-        ));
-        
-        // Reload flashcards to show the updated deck
-        add(const FlashcardEvent.loadFlashcards());
+
+      // Handle generated cards
+      if (state.generated != null) {
+        final List<Flashcard> currentGenerated = List.from(state.generated!);
+        currentGenerated.remove(flashcard);
+
+        // Save to storage
+        await _storageService.saveFlashcards(currentFlashcards, state.deckName);
+
+        // Single state update with all changes
+        if (currentGenerated.isEmpty) {
+          emit(state.copyWith(
+            flashcards: currentFlashcards,
+            generated: null,
+            // currentIndex: 0,
+          ));
+        } else {
+          cardController.moveTo(0);
+          emit(state.copyWith(
+            generated: currentGenerated,
+            // currentIndex: 0,
+          ));
+        }
       } else {
+        // Save and update state
+        await _storageService.saveFlashcards(currentFlashcards, state.deckName);
         emit(state.copyWith(
           flashcards: currentFlashcards,
-          generated: currentGenerated,
+          // currentIndex: 0,
         ));
       }
     } catch (e) {
@@ -241,41 +250,40 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
   ) async {
     try {
       final flashcard = event.flashcard;
-      
-      // If it's a generated flashcard, just remove it from generated
+      List<Flashcard> putAside = List.from(state.putAside ?? []);
+
+      putAside.add(flashcard);
+
+      // If it's a generated flashcard, modify the list in place
       if (state.generated?.contains(flashcard) ?? false) {
-        final currentGenerated = List<Flashcard>.from(state.generated!);
+        final List<Flashcard> currentGenerated = List.from(state.generated!);
         currentGenerated.remove(flashcard);
-        
-        // If this was the last generated card, clear the generated state and reload flashcards
+
+        // If this was the last generated card, clear the generated state
         if (currentGenerated.isEmpty) {
           emit(state.copyWith(
+            putAside: putAside,
             generated: null,
-            currentIndex: 0,
+            // currentIndex: 0,
           ));
-          
-          // Reload flashcards to show the main deck view
-          add(const FlashcardEvent.loadFlashcards());
         } else {
-          emit(state.copyWith(generated: currentGenerated));
+          // Single state update with all changes
+          cardController.moveTo(0);
+          emit(state.copyWith(
+            putAside: putAside,
+            generated: currentGenerated,
+            // currentIndex: 0,
+          ));
         }
         return;
       }
-      
+
       // Otherwise handle as regular flashcard
-      final currentFlashcards = List<Flashcard>.from(state.flashcards ?? []);
-      final currentPutAside = List<Flashcard>.from(state.putAside ?? []);
-      
-      currentFlashcards.remove(flashcard);
-      currentPutAside.add(flashcard);
-      
-      await _storageService.saveFlashcards(currentFlashcards, state.deckName);
-      
       emit(state.copyWith(
-        flashcards: currentFlashcards,
-        putAside: currentPutAside,
+        putAside: putAside,
       ));
     } catch (e) {
+      print('Error: $e');
       emit(state.copyWith(
         error: 'Failed to put flashcard aside. Please try again.',
       ));
@@ -349,6 +357,7 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
       deckName: deckName,
       flashcards: flashcards,
       learned: [],
+      currentIndex: state.currentIndex.clamp(0, flashcards.length - 1)
     ));
 
   }
