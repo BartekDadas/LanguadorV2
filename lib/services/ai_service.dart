@@ -16,6 +16,34 @@ class AIService {
         _client = client ?? http.Client();
 
 
+  Future<List<String>> generateWrongAnswers({
+    required String goodAnswer,
+  }) async {
+    try {
+      final response = await _client.post(
+        Uri.parse('$baseUrl/generate_wrong_answers'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'good_answer': goodAnswer,
+        }),
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body)['bad_answers'];
+        print(data);
+        return data.map((json) => json.toString().split(':')[1]).toList();
+      } else {
+        throw Exception(
+            'Failed to generate wrong answers: ${response.statusCode}');
+      }
+    } on SocketException {
+      return [];
+    } catch (e) {
+      throw Exception('Error generating wrong answers: $e');
+    }
+  }
+
+
   Future<List<Flashcard>> generateFlashcards({
     required String targetLanguage,
     required String difficulty,

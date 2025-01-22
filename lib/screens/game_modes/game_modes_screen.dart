@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/game/game_bloc.dart';
+import '../../config/dependency_injection.dart';
+import 'vocabulary_quest_setup_screen.dart';
 
 class GameModesScreen extends StatelessWidget {
   const GameModesScreen({super.key});
@@ -13,14 +17,14 @@ class GameModesScreen extends StatelessWidget {
           SliverAppBar.large(
             floating: true,
             backgroundColor: theme.colorScheme.secondary,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
+            flexibleSpace: const FlexibleSpaceBar(
+              title: Text(
                 'Game Modes',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+              titlePadding: EdgeInsets.only(left: 16, bottom: 16),
             ),
           ),
           SliverPadding(
@@ -32,7 +36,11 @@ class GameModesScreen extends StatelessWidget {
                   description: 'Master new words through interactive challenges',
                   icon: Icons.book,
                   color: theme.colorScheme.primary,
-                  onTap: () {},
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const VocabularyQuestSetupScreen(),
+                    ),
+                  ),
                 ),
                 _GameModeCard(
                   title: 'Grammar Master',
