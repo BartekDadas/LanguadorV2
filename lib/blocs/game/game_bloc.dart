@@ -55,31 +55,43 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     try {
       emit(state.copyWith(status: GameStatus.loadingOptions));
       
+      List<String> options = [event.correctAnswer];
+      
       // Try to get options from AI service
       try {
         final wrongAnswers = await _aiService.generateWrongAnswers(
           goodAnswer: event.correctAnswer,
         );
-        print(wrongAnswers);
-        if (wrongAnswers.isNotEmpty) {
-          List<String> options = [event.correctAnswer, ...wrongAnswers.take(3)];
-          options.shuffle();
-          emit(state.copyWith(
-            status: GameStatus.playing,
-            currentOptions: options,
-          ));
-          return;
+        
+        if (wrongAnswers.length >= 3) {
+          // If AI service returns enough options, use them
+          options.addAll(wrongAnswers.take(3));
+        } else {
+          // If AI service doesn't return enough options, use fallback
+          final remainingCount = 3 - wrongAnswers.length;
+          options.addAll(wrongAnswers);
+          
+          // Add fallback options if needed
+          final fallbackOptions = [
+            'not ' + event.correctAnswer,
+            event.correctAnswer + ' (incorrect)',
+            _modifyAnswer(event.correctAnswer),
+          ];
+          
+          options.addAll(fallbackOptions.take(remainingCount));
         }
       } catch (e) {
         print('Error generating wrong answers: $e');
+        // Complete fallback if AI service fails
+        options.addAll([
+          'not ' + event.correctAnswer,
+          event.correctAnswer + ' (incorrect)',
+          _modifyAnswer(event.correctAnswer),
+        ]);
       }
       
-      // Fallback to simple modifications if AI service fails
-      List<String> options = [event.correctAnswer];
-      options.add(event.correctAnswer + ' (wrong)');
-      options.add('not ' + event.correctAnswer);
-      options.add(event.correctAnswer + ' 2');
-      options.shuffle();
+      // Always ensure we have exactly 4 options
+      options = options.take(4).toList()..shuffle();
       
       emit(state.copyWith(
         status: GameStatus.playing,
@@ -90,6 +102,20 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         status: GameStatus.error,
         error: error.toString(),
       ));
+    }
+  }
+
+  String _modifyAnswer(String answer) {
+    if (answer.length > 3) {
+      // Swap two random characters
+      final chars = answer.split('');
+      final i = chars.length ~/ 2;
+      final temp = chars[i];
+      chars[i] = chars[i - 1];
+      chars[i - 1] = temp;
+      return chars.join('');
+    } else {
+      return answer + ' (other)';
     }
   }
 

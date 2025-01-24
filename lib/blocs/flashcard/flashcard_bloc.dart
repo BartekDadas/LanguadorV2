@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:languador/models/user_model.dart';
 import 'package:languador/providers/flashcards_provider.dart';
 import 'package:languador/services/local_storage_service.dart';
+import 'package:languador/utils/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/flashcard.dart';
 import '../../services/ai_service.dart';
@@ -123,7 +124,6 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
         targetLanguage: event.language,
         difficulty: event.difficulty,
       );
-
       if (flashcards.isNotEmpty) {
         emit(state.copyWith(
           isLoading: false,
@@ -136,7 +136,14 @@ class FlashcardBloc extends Bloc<FlashcardEvent, FlashcardState> {
           error: 'No flashcards were generated. Please try again with a different topic.',
         ));
       }
-    } catch (error) {
+    }
+    on ConnectionException {
+      emit(state.copyWith(
+        isLoading: false,
+        error: 'No connection to the AI server. Please try again later.',
+      ));
+    }
+    catch (error) {
       emit(state.copyWith(
         isLoading: false,
         error: 'Failed to generate flashcards. Please try again.',

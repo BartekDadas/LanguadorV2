@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/deck_service.dart';
 import '../../blocs/game/game_bloc.dart';
@@ -61,22 +62,10 @@ class _VocabularyQuestSetupScreenState extends State<VocabularyQuestSetupScreen>
       return;
     }
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => GetIt.I<GameBloc>(),
-            ),
-            BlocProvider(
-              create: (context) => GetIt.I<FlashcardBloc>()
-                ..add(FlashcardEvent.loadFlashcards(deckName: _selectedDeck)),
-            ),
-          ],
-          child: VocabularyQuestScreen(deckName: _selectedDeck!),
-        ),
-      ),
-    );
+    // Initialize blocs before navigation
+    
+    // Navigate to the game screen
+    context.go('/vocabulary-quest/play/$_selectedDeck');
   }
 
   @override

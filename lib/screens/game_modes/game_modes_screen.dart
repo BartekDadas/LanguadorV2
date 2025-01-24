@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/game/game_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../config/dependency_injection.dart';
-import 'vocabulary_quest_setup_screen.dart';
 
 class GameModesScreen extends StatelessWidget {
   const GameModesScreen({super.key});
@@ -36,11 +35,7 @@ class GameModesScreen extends StatelessWidget {
                   description: 'Master new words through interactive challenges',
                   icon: Icons.book,
                   color: theme.colorScheme.primary,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const VocabularyQuestSetupScreen(),
-                    ),
-                  ),
+                  onTap: () => context.go('/vocabulary-quest'),
                 ),
                 _GameModeCard(
                   title: 'Grammar Master',

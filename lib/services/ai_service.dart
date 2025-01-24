@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:languador/services/auth_service.dart';
+import 'package:languador/utils/exceptions.dart';
 import 'package:languador/utils/string_to_flashcard.dart';
 import '../models/flashcard.dart';
 
@@ -62,6 +63,7 @@ class AIService {
           'difficulty': difficulty,
         }),
       );
+      print(response.statusCode);
       print(response.body);
       if (response.statusCode == 200) {
         // print(response.body);
@@ -69,13 +71,16 @@ class AIService {
         print(data);
         return data.map((json) => stringToFlashcard(json, targetLanguage))
             .toList();
+      } else if (response.statusCode == 404) {
+        throw ConnectionException('No connection to the AI server');
       } else {
         throw Exception(
             'Failed to generate flashcards: ${response.statusCode}');
       }
     } on SocketException {
-      return [];
+      throw ConnectionException('No connection to the AI server');
     } catch (e) {
+      print(e);
       throw Exception('Error generating flashcards: $e');
     }
   }

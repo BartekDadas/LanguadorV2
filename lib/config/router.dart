@@ -5,6 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:languador/screens/game_modes/game_modes_screen.dart';
+import '../blocs/game/game_bloc.dart';
+import '../screens/game_modes/vocabulary_quest_screen.dart';
+import '../screens/game_modes/vocabulary_quest_setup_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/auth/login_screen.dart';
@@ -14,6 +17,8 @@ import '../screens/flashcards/flashcard_screen.dart';
 import '../services/ai_service.dart';
 import '../services/auth_service.dart';
 import '../blocs/flashcard/flashcard_bloc.dart';
+// import '../screens/vocabulary_quest/vocabulary_quest_setup_screen.dart';
+// import '../screens/vocabulary_quest/vocabulary_quest_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _getIt = GetIt.instance;
@@ -48,6 +53,35 @@ final router = GoRouter(
       path: '/register',
       builder: (context, state) => RegisterScreen(),
     ),
+    
+    // Game routes (outside shell)
+    GoRoute(
+      path: '/vocabulary-quest',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const VocabularyQuestSetupScreen(),
+      routes: [
+        GoRoute(
+          path: '/play/:deckName',
+          parentNavigatorKey: _rootNavigatorKey,
+          builder: (context, state) =>
+          MultiBlocProvider(providers: [
+            BlocProvider(
+              create: (context) => GetIt.I<GameBloc>(),
+            ),
+            BlocProvider(
+              create: (context) => GetIt.I<FlashcardBloc>()
+                ..add(FlashcardEvent.loadFlashcards(deckName: state.pathParameters['deckName']!)),
+            ),
+          ],
+          child: VocabularyQuestScreen(
+              deckName: state.pathParameters['deckName']!,
+            ),
+          ),
+        ),
+      ]
+    ),
+    //
+    // ),
     
     // Main app routes with navigation shell
     StatefulShellRoute.indexedStack(
